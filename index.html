@@ -4,141 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>internErasmus</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="dark-mode">
 
-    <header class="header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap;">
-            <div class="logo">intern<span>Erasmus</span></div>
-            <nav class="tabs" style="margin-left: 2rem;">
-                <button class="tab-btn active" data-tab="cold">Companies <span id="companies-count">(0)</span></button>
-                <button class="tab-btn" data-tab="newly_added">Recently Added</button>
-                <button class="tab-btn" data-tab="kaydedilenler">Saved Companies <span id="saved-count">(0)</span></button>
-            </nav>
-        </div>
+    <!-- Banner -->
+    <div class="banner">
+        <span>Find your next Erasmus+ internship or international position easily.</span>
+        <button class="banner-close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
 
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <div style="display: flex; gap: 1.5rem; margin-right: 1.5rem;">
-                <button class="tab-btn" data-tab="recommendations" style="font-size: 0.9rem;">Recommendations & Feedback</button>
-                <button class="tab-btn" data-tab="analytics" style="font-size: 0.9rem;">Analytics</button>
-                <button class="tab-btn" data-tab="about" style="font-size: 0.9rem;">About</button>
-            </div>
-            <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-            </button>
-        </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">intern<span>Erasmus</span></div>
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="cold">Companies <span id="companies-count">(0)</span></button>
+            <button class="tab-btn" data-tab="newly_added">Recently Added</button>
+            <button class="tab-btn" data-tab="kaydedilenler">Saved Companies <span id="saved-count">(0)</span></button>
+            <button class="tab-btn" data-tab="feedback">Feedback</button>
+            <button class="tab-btn" data-tab="analytics">Analytics</button>
+            <button class="tab-btn" data-tab="about">About</button>
+        </nav>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+            <!-- Moon Icon -->
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <!-- Sun Icon -->
+            <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
     </header>
 
+    <!-- Main Container -->
     <main class="container">
-        <div class="search-filter-section">
+        <!-- Search & Filters Section -->
+        <section class="search-filter-section">
             <div class="primary-filters">
-                <input type="text" id="search-input" class="filter-input search-box" placeholder="Search company, keyword...">
-                
-                <div class="dropdown-check-list" tabindex="100">
+                <!-- Search Input -->
+                <input type="text" id="search-input" class="filter-input" placeholder="Search company, keyword...">
+
+                <!-- Location Dropdown Checklist -->
+                <div class="dropdown-check-list">
                     <span class="anchor" id="location-anchor">All Locations</span>
                     <ul class="items" id="location-items">
-                        <li><label><input type="checkbox" value="All" checked /> <span class="loc-text">All Locations</span></label></li>
-                        <li><label><input type="checkbox" value="International" /> <span class="loc-text">International</span></label></li>
-                        <li><label><input type="checkbox" value="Austria" /> <span class="loc-text">Austria</span></label></li>
-                        <li><label><input type="checkbox" value="Belgium" /> <span class="loc-text">Belgium</span></label></li>
-                        <li><label><input type="checkbox" value="Bulgaria" /> <span class="loc-text">Bulgaria</span></label></li>
-                        <li><label><input type="checkbox" value="Croatia" /> <span class="loc-text">Croatia</span></label></li>
-                        <li><label><input type="checkbox" value="Cyprus" /> <span class="loc-text">Cyprus</span></label></li>
-                        <li><label><input type="checkbox" value="Czechia" /> <span class="loc-text">Czechia</span></label></li>
-                        <li><label><input type="checkbox" value="Denmark" /> <span class="loc-text">Denmark</span></label></li>
-                        <li><label><input type="checkbox" value="Estonia" /> <span class="loc-text">Estonia</span></label></li>
-                        <li><label><input type="checkbox" value="Finland" /> <span class="loc-text">Finland</span></label></li>
-                        <li><label><input type="checkbox" value="France" /> <span class="loc-text">France</span></label></li>
-                        <li><label><input type="checkbox" value="Germany" /> <span class="loc-text">Germany</span></label></li>
-                        <li><label><input type="checkbox" value="Greece" /> <span class="loc-text">Greece</span></label></li>
-                        <li><label><input type="checkbox" value="Hungary" /> <span class="loc-text">Hungary</span></label></li>
-                        <li><label><input type="checkbox" value="Iceland" /> <span class="loc-text">Iceland</span></label></li>
-                        <li><label><input type="checkbox" value="Ireland" /> <span class="loc-text">Ireland</span></label></li>
-                        <li><label><input type="checkbox" value="Italy" /> <span class="loc-text">Italy</span></label></li>
-                        <li><label><input type="checkbox" value="Latvia" /> <span class="loc-text">Latvia</span></label></li>
-                        <li><label><input type="checkbox" value="Liechtenstein" /> <span class="loc-text">Liechtenstein</span></label></li>
-                        <li><label><input type="checkbox" value="Lithuania" /> <span class="loc-text">Lithuania</span></label></li>
-                        <li><label><input type="checkbox" value="Luxembourg" /> <span class="loc-text">Luxembourg</span></label></li>
-                        <li><label><input type="checkbox" value="Malta" /> <span class="loc-text">Malta</span></label></li>
-                        <li><label><input type="checkbox" value="Netherlands" /> <span class="loc-text">Netherlands</span></label></li>
-                        <li><label><input type="checkbox" value="North Macedonia" /> <span class="loc-text">North Macedonia</span></label></li>
-                        <li><label><input type="checkbox" value="Norway" /> <span class="loc-text">Norway</span></label></li>
-                        <li><label><input type="checkbox" value="Poland" /> <span class="loc-text">Poland</span></label></li>
-                        <li><label><input type="checkbox" value="Portugal" /> <span class="loc-text">Portugal</span></label></li>
-                        <li><label><input type="checkbox" value="Romania" /> <span class="loc-text">Romania</span></label></li>
-                        <li><label><input type="checkbox" value="Serbia" /> <span class="loc-text">Serbia</span></label></li>
-                        <li><label><input type="checkbox" value="Slovakia" /> <span class="loc-text">Slovakia</span></label></li>
-                        <li><label><input type="checkbox" value="Slovenia" /> <span class="loc-text">Slovenia</span></label></li>
-                        <li><label><input type="checkbox" value="Spain" /> <span class="loc-text">Spain</span></label></li>
-                        <li><label><input type="checkbox" value="Sweden" /> <span class="loc-text">Sweden</span></label></li>
-                        <li><label><input type="checkbox" value="Türkiye" /> <span class="loc-text">Türkiye</span></label></li>
-                        <li><label><input type="checkbox" value="United Kingdom" /> <span class="loc-text">United Kingdom</span></label></li>
+                        <li><label><input type="checkbox" value="All" checked> <span class="loc-text">All Locations</span></label></li>
+                        <li><label><input type="checkbox" value="Germany"> <span class="loc-text">Germany</span></label></li>
+                        <li><label><input type="checkbox" value="France"> <span class="loc-text">France</span></label></li>
+                        <li><label><input type="checkbox" value="Spain"> <span class="loc-text">Spain</span></label></li>
+                        <li><label><input type="checkbox" value="Italy"> <span class="loc-text">Italy</span></label></li>
+                        <li><label><input type="checkbox" value="Netherlands"> <span class="loc-text">Netherlands</span></label></li>
+                        <li><label><input type="checkbox" value="Portugal"> <span class="loc-text">Portugal</span></label></li>
+                        <li><label><input type="checkbox" value="Greece"> <span class="loc-text">Greece</span></label></li>
+                        <li><label><input type="checkbox" value="Austria"> <span class="loc-text">Austria</span></label></li>
+                        <li><label><input type="checkbox" value="Belgium"> <span class="loc-text">Belgium</span></label></li>
+                        <li><label><input type="checkbox" value="Poland"> <span class="loc-text">Poland</span></label></li>
+                        <li><label><input type="checkbox" value="Czechia"> <span class="loc-text">Czechia</span></label></li>
                     </ul>
                 </div>
 
+                <!-- Category / Field Select -->
                 <select id="field-select" class="filter-input custom-select">
-                    <option value="All">All Categories</option>
+                    <option value="All" selected>All Categories</option>
                     <option value="Engineering">Engineering</option>
-                    <option value="Visual Arts">Visual Arts</option>
-                    <option value="Medicine">Medicine</option>
+                    <option value="Software">Software</option>
                     <option value="Business">Business</option>
-                    <option value="Architecture">Architecture</option>
-                    <option value="Law">Law</option>
-                    <option value="Education">Education</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Design">Design</option>
-                    <option value="Finance">Finance</option>
-                    <option value="IT & Software">IT & Software</option>
-                    <option value="Natural Sciences">Natural Sciences</option>
-                    <option value="Humanities">Humanities</option>
-                    <option value="Media & Communications">Media & Communications</option>
-                    <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                    <option value="Art">Art</option>
                 </select>
 
+                <!-- Subcategory Select (for Engineering) -->
                 <select id="subcategory-select" class="filter-input custom-select hidden">
-                    <option value="All">All Subcategories</option>
+                    <option value="All" selected>All Subcategories</option>
                     <option value="Electrical">Electrical</option>
                     <option value="Mechanical">Mechanical</option>
-                    <option value="Software">Software</option>
-                    <option value="Computer">Computer</option>
+                    <option value="Mechatronics">Mechatronics</option>
                     <option value="Civil">Civil</option>
-                    <option value="Industrial">Industrial</option>
-                    <option value="Aerospace">Aerospace</option>
+                    <option value="Chemical">Chemical</option>
                 </select>
             </div>
-        </div>
-
-        <section class="job-board">
-            <div id="job-container" class="job-grid"></div>
         </section>
+
+        <!-- Job Board Grid -->
+        <div class="job-board">
+            <div class="job-grid" id="job-container">
+                <!-- Dynamic cards will be rendered here -->
+            </div>
+        </div>
     </main>
 
-    <div id="job-modal" class="modal hidden">
+    <!-- Modal -->
+    <div class="modal hidden" id="job-modal">
         <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <button id="close-modal" class="modal-close-btn" aria-label="Close">✕</button>
-            <div id="modal-body"></div>
+        <div class="modal-content" tabindex="0">
+            <button class="modal-close-btn" id="close-modal">&times;</button>
+            <div id="modal-body">
+                <!-- Dynamic modal content -->
+            </div>
         </div>
     </div>
 
-    <form name="feedback-form" data-netlify="true" netlify-honeypot="bot-field" hidden>
-        <input type="text" name="topic" />
+    
+    <form name="feedback-form" netlify hidden>
+        <input type="hidden" name="form-name" value="feedback-form" />
+        <select name="topic"></select>
         <textarea name="message"></textarea>
+        <input type="text" name="company_name" />
+        <input type="text" name="company_id" />
     </form>
 
-    <script src="script.js"></script>
-
     
-<form name="feedback-form" netlify hidden>
-    <input type="hidden" name="form-name" value="feedback-form" />
-    <select name="topic"></select>
-    <textarea name="message"></textarea>
-    <input type="text" name="company_name" />
-    <input type="text" name="company_id" />
-</form>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
