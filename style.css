@@ -37,7 +37,11 @@ body.dark-mode {
     --box-bg: #162238;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
 
 html, body {
     max-width: 100vw;
@@ -361,24 +365,35 @@ select.custom-select {
     .header {
         flex-wrap: wrap;
         padding: 1rem 5%;
+        gap: 1rem;
+    }
+    .logo {
+        flex: 1 1 auto;
+    }
+    .theme-btn {
+        order: 2;
     }
     .nav-middle-wrapper {
         order: 3;
         width: 100%;
-        max-width: 100%;
-        margin: 1rem 0 0 0; 
+        margin: 0; 
+        display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
+        justify-content: flex-start;
+        gap: 0.8rem;
     }
     .tabs-left, .tabs-right {
+        display: flex;
         flex-wrap: wrap;
-        justify-content: center;
         gap: 0.8rem;
+        justify-content: flex-start;
     }
     .tab-btn {
         font-size: 0.9rem;
-        white-space: normal;
+        padding-bottom: 0.2rem;
+    }
+    .tab-btn.active::after {
+        bottom: -0.2rem;
     }
 }
 
@@ -415,11 +430,5 @@ select.custom-select {
     }
     .job-title {
         font-size: 1.1rem;
-    }
-    .tab-btn {
-        font-size: 0.85rem;
-    }
-    .tabs-left, .tabs-right {
-        gap: 0.5rem;
     }
 }
