@@ -9,7 +9,6 @@
     --input-border: #64748b; 
     --accent-light: #e0e7ff;
     --accent-text: #3730a3;
-    --banner-bg: #cbd5e1;
     --input-bg: #ffffff;
     --hover-bg: #f8fafc;
     --heart-color: #94a3b8;
@@ -30,7 +29,6 @@ body.dark-mode {
     --input-border: #475569;
     --accent-light: #1e3a8a;
     --accent-text: #bfdbfe;
-    --banner-bg: #0f172a;
     --input-bg: #1e293b;
     --hover-bg: #334155;
     --heart-color: #64748b;
@@ -51,18 +49,73 @@ body {
 
 .hidden { display: none !important; }
 
-/* Banner & Header */
-.banner { background-color: var(--banner-bg); color: var(--text-company); font-size: 0.85rem; padding: 0.6rem 1rem; display: flex; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid var(--border-color); }
-.banner-close-btn { position: absolute; right: 1rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; opacity: 0.8; }
-.header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; background-color: var(--surface-color); border-bottom: 1px solid var(--border-color); }
-.logo { font-size: 1.25rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
-.logo span { color: var(--accent-text); font-weight: 400; }
-.tabs { display: flex; gap: 1.5rem; }
-.tab-btn { background: none; border: none; font-family: inherit; font-size: 1rem; color: var(--text-muted); cursor: pointer; padding: 0.5rem 0; position: relative; transition: color 0.3s ease; font-weight: 500; }
+/* Header & Gruplandırma */
+.header { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 1.5rem 5%; 
+    background-color: var(--surface-color); 
+    border-bottom: 1px solid var(--border-color); 
+}
+.logo { 
+    font-size: 1.25rem; 
+    font-weight: 700; 
+    color: var(--text-main); 
+    letter-spacing: -0.5px; 
+}
+.logo span { 
+    color: var(--accent-text); 
+    font-weight: 400; 
+}
+
+/* Orta Kısım: İki Grubu Ayıran ve Büyük Boşluk Bırakan Yapı */
+.nav-middle-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    margin: 0 4rem;
+}
+
+.tabs-left { 
+    display: flex; 
+    gap: 2rem; 
+}
+
+.tabs-right { 
+    display: flex; 
+    gap: 2rem; 
+}
+
+.tab-btn { 
+    background: none; 
+    border: none; 
+    font-family: inherit; 
+    font-size: 1rem; 
+    color: var(--text-muted); 
+    cursor: pointer; 
+    padding: 0.5rem 0; 
+    position: relative; 
+    transition: color 0.3s ease; 
+    font-weight: 500; 
+    white-space: nowrap;
+}
 .tab-btn.active { color: var(--text-main); font-weight: 600; }
 .tab-btn.active::after { content: ''; position: absolute; bottom: -1.5rem; left: 0; width: 100%; height: 2px; background-color: var(--text-main); }
 #saved-count { font-size: 0.8rem; background-color: var(--accent-light); color: var(--accent-text); padding: 2px 8px; border-radius: 12px; margin-left: 4px; font-weight: 600; }
-.theme-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s; display: flex; align-items: center; }
+
+.theme-btn { 
+    background: none; 
+    border: none; 
+    color: var(--text-muted); 
+    cursor: pointer; 
+    padding: 0.5rem; 
+    border-radius: 50%; 
+    transition: background-color 0.2s; 
+    display: flex; 
+    align-items: center; 
+}
 .theme-btn:hover { background-color: var(--hover-bg); color: var(--text-main); }
 
 /* Filters */

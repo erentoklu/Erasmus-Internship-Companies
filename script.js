@@ -43,7 +43,6 @@ function toSentenceCase(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Şirket isimlerinden yasal ibareleri (GmbH, Ltd, vb.) temizleme fonksiyonu
 function cleanCompanyName(name) {
     if (!name) return "";
     let cleaned = String(name).toUpperCase();
@@ -84,7 +83,6 @@ const flagSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" 
 const leftArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`;
 const rightArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
 
-// --- ÖZEL LOKASYON DROPDOWN (CHECKBOX) MANTIĞI ---
 function setupLocationDropdown() {
     const locationAnchor = document.getElementById('location-anchor');
     const checkList = document.querySelector('.dropdown-check-list');
@@ -224,7 +222,7 @@ fieldSelect.addEventListener('change', (e) => {
 });
 
 function renderJobs(resetPage = true) {
-    if (currentTab === 'about' || currentTab === 'analytics' || currentTab === 'feedback') {
+    if (currentTab === 'about' || currentTab === 'analytics' || currentTab === 'recommendations') {
         document.querySelector('.search-filter-section').classList.add('hidden');
         
         if (currentTab === 'about') {
@@ -254,7 +252,7 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                     </p>
                 </div>
             `;
-        } else if (currentTab === 'feedback') {
+        } else if (currentTab === 'recommendations') {
             jobContainer.innerHTML = `
                 <div style="grid-column: 1 / -1; max-width: 600px; margin: 2rem auto; width: 100%;">
                     <div style="background-color: var(--surface-color); padding: 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
@@ -439,9 +437,9 @@ If you find it useful, please share it so it can reach more people. Also, feel f
             if (currentTab === 'kaydedilenler') {
                 if (!savedJobs.includes(job.id)) return false;
             } else if (currentTab === 'newly_added') {
-                if (job.tab === 'about' || job.tab === 'analytics' || job.tab === 'feedback') return false;
+                if (job.tab === 'about' || job.tab === 'analytics' || job.tab === 'recommendations') return false;
             } else {
-                if (job.tab !== currentTab && currentTab !== 'about' && currentTab !== 'analytics' && currentTab !== 'feedback') return false;
+                if (job.tab !== currentTab && currentTab !== 'about' && currentTab !== 'analytics' && currentTab !== 'recommendations') return false;
             }
 
             const matchSearch = job.company.includes(searchText) || 
@@ -579,7 +577,6 @@ jobContainer.addEventListener('click', (e) => {
     }
 });
 
-// --- FEEDBACK GÖNDERME FONKSİYONU ---
 window.submitFeedback = function(event) {
     event.preventDefault();
     const form = event.target;
@@ -719,8 +716,8 @@ function openModal(jobId) {
             const formData = new URLSearchParams();
             formData.append("form-name", "feedback-form");
             formData.append("topic", "REPORT_ERROR");
-            formData.append("company_name", companyName); // Şirket adı ayrı alan olarak gidiyor
-            formData.append("company_id", clickedJobId);     // Şirket ID'si ayrı alan olarak gidiyor
+            formData.append("company_name", companyName);
+            formData.append("company_id", clickedJobId);
             formData.append("message", `Kullanıcı "${companyName}" (ID: #${clickedJobId}) adlı şirket için hata bildiriminde bulundu.`);
 
             fetch("/", {
@@ -815,7 +812,6 @@ themeToggle.addEventListener('click', () => {
 const filterInputs = document.querySelectorAll('.filter-input:not(#location-select)');
 filterInputs.forEach(el => el.addEventListener('input', () => renderJobs(true)));
 
-// --- KLAVYE KISAYOLLARI ETKİLEŞİMİ ---
 jobContainer.addEventListener('keydown', (e) => {
     if (e.target.id === 'load-more-btn') {
         if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w' || e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
