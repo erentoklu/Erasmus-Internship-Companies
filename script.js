@@ -5,6 +5,7 @@ let currentTab = 'cold';
 let currentPage = 1;
 const itemsPerPage = 50;
 let currentFilteredJobs = [];
+let currentOpenJobId = null;
 
 let savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
 savedJobs = savedJobs.filter(id => id !== null && id !== undefined && !isNaN(id));
@@ -25,16 +26,109 @@ const modalBody = document.getElementById('modal-body');
 const fieldSelect = document.getElementById('field-select');
 const subcategorySelect = document.getElementById('subcategory-select');
 
-if (localStorage.getItem('theme') === 'dark') {
+// --- METİN FORMATLAMA FONKSİYONLARI ---
+function toTitleCase(str) {
+    if (!str) return "";
+    return str.split(' ').map(word => {
+        if(!word) return "";
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
+}
+
+function toSentenceCase(str) {
+    if (!str) return "";
+    if (str === str.toUpperCase()) {
+        str = str.toLowerCase();
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Şirket isimlerinden yasal ibareleri (GmbH, Ltd, vb.) temizleme fonksiyonu
+function cleanCompanyName(name) {
+    if (!name) return "";
+    let cleaned = String(name).toUpperCase();
+    
+    const suffixes = [
+        'GMBH & CO\\. KG', 'GMBH & CO\\.KG', 'GMBH', 'LTD\\. ŞTİ\\.', 'LTD ŞTI', 'LTD ŞTİ', 'LTD\\.', 'LTD', 'ŞTİ\\.', 'ŞTİ', 'STI',
+        'A\\.Ş\\.', 'A\\.S\\.', 'AŞ', 'AS', 'SP\\. Z O\\.O\\.', 'SP\\. Z O\\. O\\.', 'SP Z O O', 'SP Z\\.O\\.O\\.',
+        'LLC', 'INC\\.', 'INC', 'CORP\\.', 'CORP', 'S\\.A\\.', 'SA', 'S\\.R\\.L\\.', 'SRL', 
+        'S\\.L\\.', 'SL', 'B\\.V\\.', 'BV', 'N\\.V\\.', 'NV', 'S\\.P\\.A\\.', 'SPA', 
+        'LIMITED', 'COMPANY', 'INCORPORATED', 'CORPORATION',
+        'UG', 'AG', 'AB', 'OY', 'S\\.A\\.R\\.L\\.', 'SARL', 'S\\.A\\.S\\.', 'SAS', 'KG'
+    ];
+    
+    const regex = new RegExp(`\\b(?:${suffixes.join('|')})\\b\\.?`, 'g');
+    cleaned = cleaned.replace(regex, '');
+    cleaned = cleaned.replace(/[,.\-\s]+$/, ''); 
+    cleaned = cleaned.replace(/\s+/g, ' ').trim(); 
+    
+    return cleaned;
+}
+
+// --- KARANLIK MOD (DEFAULT) ---
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark' || savedTheme === null) {
     document.body.classList.add('dark-mode');
     moonIcon.classList.add('hidden');
     sunIcon.classList.remove('hidden');
+    if (savedTheme === null) {
+        localStorage.setItem('theme', 'dark');
+    }
 }
 
 const heartSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
 const searchSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`;
 const loadingSVG = `<svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>`;
 const companySVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>`;
+const flagSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`;
+const leftArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`;
+const rightArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+
+// --- ÖZEL LOKASYON DROPDOWN (CHECKBOX) MANTIĞI ---
+function setupLocationDropdown() {
+    const locationAnchor = document.getElementById('location-anchor');
+    const checkList = document.querySelector('.dropdown-check-list');
+    const locCheckboxes = document.querySelectorAll('#location-items input[type="checkbox"]');
+
+    locationAnchor.addEventListener('click', (e) => {
+        checkList.classList.toggle('visible');
+        e.stopPropagation();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!checkList.contains(e.target)) {
+            checkList.classList.remove('visible');
+        }
+    });
+
+    locCheckboxes.forEach(cb => {
+        cb.addEventListener('change', (e) => {
+            if (e.target.value === 'All' && e.target.checked) {
+                locCheckboxes.forEach(box => {
+                    if (box.value !== 'All') box.checked = false;
+                });
+            } else if (e.target.value !== 'All' && e.target.checked) {
+                locCheckboxes[0].checked = false;
+            }
+
+            const anyChecked = Array.from(locCheckboxes).some(box => box.checked);
+            if (!anyChecked) {
+                locCheckboxes[0].checked = true;
+            }
+
+            const checkedBoxes = Array.from(locCheckboxes).filter(box => box.checked);
+            if (checkedBoxes[0].value === 'All') {
+                locationAnchor.textContent = 'All Locations';
+            } else {
+                const names = checkedBoxes.map(b => b.value);
+                locationAnchor.textContent = names.join(', ');
+            }
+
+            renderJobs(true);
+        });
+    });
+}
+setupLocationDropdown();
 
 function updateSavedCount() {
     if (savedCount) savedCount.textContent = `(${savedJobs.length})`;
@@ -45,13 +139,17 @@ function updateCompaniesCount() {
 }
 
 function updateLocationCounts() {
-    const locationSelect = document.getElementById('location-select');
-    Array.from(locationSelect.options).forEach(option => {
-        const loc = option.value.toUpperCase();
+    const labels = document.querySelectorAll('#location-items label');
+    labels.forEach(label => {
+        const cb = label.querySelector('input');
+        const span = label.querySelector('.loc-text');
+        if (!span) return;
+        
+        const loc = cb.value.toUpperCase();
         if (loc === 'ALL') return;
-        const count = jobsData.filter(job => job.location && job.location.includes(loc)).length;
-        const baseText = option.text.split(' (')[0];
-        option.text = `${baseText} (${count})`;
+        
+        const count = jobsData.filter(job => job.location && job.location.toUpperCase().includes(loc)).length;
+        span.textContent = `${cb.value} (${count})`;
     });
 }
 
@@ -78,15 +176,15 @@ async function fetchJobs() {
         
         const formattedData = data.map(job => ({
             id: parseInt(job.id),
-            company: job.company ? String(job.company).toUpperCase() : '',
-            location: job.location ? String(job.location).toUpperCase() : '',
+            company: job.company ? cleanCompanyName(job.company) : '',
+            location: job.location ? toTitleCase(String(job.location)) : '',
             category: job.category ? String(job.category).toUpperCase() : '',
             subcategory: job.subcategory ? String(job.subcategory).toUpperCase().split(',').map(s => s.trim()).filter(s => s) : [],
             subcategory2: job.subcategory2 ? String(job.subcategory2).toUpperCase().split(',').map(s => s.trim()).filter(s => s) : [],
             tab: job.tab ? String(job.tab).toLowerCase() : '',
-            description: job.description ? String(job.description).toUpperCase() : '',
-            requirements: job.requirements ? String(job.requirements).toUpperCase() : '',
-            contact: (job.contacts || job.contact) ? String(job.contacts || job.contact).toUpperCase() : '', 
+            description: job.description ? toSentenceCase(String(job.description)) : '',
+            requirements: job.requirements ? toSentenceCase(String(job.requirements)) : '',
+            contact: (job.contacts || job.contact) ? String(job.contacts || job.contact) : '', 
             link: job.link || ''
         }));
         
@@ -126,7 +224,7 @@ fieldSelect.addEventListener('change', (e) => {
 });
 
 function renderJobs(resetPage = true) {
-    if (currentTab === 'about' || currentTab === 'analytics' || currentTab === 'recommendations') {
+    if (currentTab === 'about' || currentTab === 'analytics' || currentTab === 'feedback') {
         document.querySelector('.search-filter-section').classList.add('hidden');
         
         if (currentTab === 'about') {
@@ -150,65 +248,43 @@ The main goal here is to save you time. The site is all about simplicity and wor
 If you find it useful, please share it so it can reach more people. Also, feel free to leave feedback to help it grow. Best of luck with your search!
                     </p>
 
-                    <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem;">YOUR DATA IS YOURS</h3>
+                    <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem;">Your data is yours</h3>
                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8;">
-                        NO ACCOUNT CREATION IS REQUIRED. EVERY COMPANY YOU SAVE IS STORED STRICTLY ON YOUR OWN DEVICE'S BROWSER (LOCALSTORAGE). WE DO NOT TRACK, STORE, OR SELL YOUR PERSONAL DATA.
+                        No account creation is required. Every company you save is stored strictly on your own device's browser (localStorage). We do not track, store, or sell your personal data.
                     </p>
                 </div>
             `;
-        } else if (currentTab === 'recommendations') {
+        } else if (currentTab === 'feedback') {
             jobContainer.innerHTML = `
-                <div style="grid-column: 1 / -1; max-width: 900px; margin: 2rem auto; display: flex; flex-wrap: wrap; gap: 2rem;">
-                    
-                    <!-- Sol Taraf: Öneriler -->
-                    <div style="flex: 1; min-width: 300px; background-color: var(--surface-color); padding: 2rem; border: 1px solid var(--border-color); border-radius: 8px;">
-                        <h2 style="color: var(--accent-text); margin-bottom: 1.5rem; font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">TIPS FOR YOUR SEARCH</h2>
-                        
-                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1.5rem; color: var(--text-muted);">
-                            <li>
-                                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">1. TAILOR YOUR EMAILS</strong>
-                                Don't just copy-paste the templates. Modify them to mention a specific recent project the company worked on to show genuine interest.
-                            </li>
-                            <li>
-                                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">2. SHOWCASE YOUR PROJECTS</strong>
-                                A standard CV often isn't enough. If you are in engineering, design, or software, attach a personal portfolio highlighting hands-on projects or independent research.
-                            </li>
-                            <li>
-                                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">3. THE 1-WEEK FOLLOW-UP</strong>
-                                Companies are busy. If you don't hear back after 7 days, reply to your original email with a polite, one-sentence reminder. This dramatically increases response rates.
-                            </li>
-                            <li>
-                                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">4. EMPHASIZE THE GRANT</strong>
-                                Always make it clear early in your communication that you are eligible for an Erasmus+ grant, meaning you won't be a financial burden on the host organization.
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Sağ Taraf: Feedback Formu -->
-                    <div style="flex: 1; min-width: 300px; background-color: var(--surface-color); padding: 2rem; border: 1px solid var(--border-color); border-radius: 8px;">
-                        <h2 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.5rem;">WE VALUE YOUR FEEDBACK</h2>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                            Do you want to suggest a new company, report a broken link, or share ideas to improve this platform? Send a message directly to the developer. (This is private and won't be displayed publicly).
-                        </p>
-
-                        <form name="feedback-form" method="POST" data-netlify="true" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="grid-column: 1 / -1; max-width: 600px; margin: 2rem auto; width: 100%;">
+                    <div style="background-color: var(--surface-color); padding: 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                        <h2 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.8rem; text-align: center;">WE VALUE YOUR FEEDBACK</h2>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; text-align: center;">Do you want to suggest a new company, report a broken link, or share ideas to improve this platform? Send a message directly to the developer.</p>
+                        <form id="recommendation-form" onsubmit="submitFeedback(event)" style="display: flex; flex-direction: column; gap: 1rem;">
                             <input type="hidden" name="form-name" value="feedback-form" />
-                            
-                            <select name="topic" class="filter-input custom-select" required style="width: 100%;">
+                            <select id="topic-select" name="topic" class="filter-input custom-select" required style="width: 100%;">
                                 <option value="" disabled selected>SELECT A TOPIC...</option>
                                 <option value="SUGGEST_COMPANY">Suggest a New Company</option>
                                 <option value="REPORT_ERROR">Report Broken Link / Error</option>
                                 <option value="UX_SUGGESTION">Site Improvement Suggestion</option>
                                 <option value="OTHER">Other</option>
                             </select>
-
                             <textarea name="message" class="filter-input" rows="6" placeholder="WRITE YOUR MESSAGE HERE..." required style="width: 100%; resize: vertical; font-family: inherit;"></textarea>
-
                             <button type="submit" class="copy-btn" style="margin-top: 0.5rem;">SEND FEEDBACK</button>
                         </form>
                     </div>
                 </div>
             `;
+
+            const topicSelect = document.getElementById('topic-select');
+            if (topicSelect) {
+                topicSelect.addEventListener('invalid', function() {
+                    this.setCustomValidity('Please select an item in the list.');
+                });
+                topicSelect.addEventListener('input', function() {
+                    this.setCustomValidity('');
+                });
+            }
         } else if (currentTab === 'analytics') {
             const totalCompanies = jobsData.length;
             const savedJobsData = jobsData.filter(job => savedJobs.includes(job.id));
@@ -248,9 +324,8 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                     <h2 style="margin-bottom: 2rem; color: var(--text-main); font-size: 1.8rem; text-align: center;">ANALYTICS IN NUMBERS</h2>
                     
                     <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
-                        <div style="flex: 1; min-width: 300px; background: var(--bg-color); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="flex: 1; min-width: 300px; background: var(--box-bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
                             <h3 style="color: var(--accent-text); margin-bottom: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem;">ALL COMPANIES (${totalCompanies})</h3>
-                            
                             <div style="margin-bottom: 2.5rem;">
                                 <h4 style="text-align: center; color: var(--text-main); font-size: 0.95rem; margin-bottom: 1rem; font-weight: 500;">COMPANIES BY COUNTRY</h4>
                                 <canvas id="chart-all-loc"></canvas>
@@ -261,9 +336,8 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                             </div>
                         </div>
 
-                        <div style="flex: 1; min-width: 300px; background: var(--bg-color); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h3 style="color: var(--heart-active); margin-bottom: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem;">YOUR SAVED COMPANIES (${savedCountTotal})</h3>
-                            
+                        <div style="flex: 1; min-width: 300px; background: var(--box-bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h3 style="color: #8e72be; margin-bottom: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem;">YOUR SAVED COMPANIES (${savedCountTotal})</h3>
                             ${savedCountTotal > 0 ? `
                                 <div style="margin-bottom: 2.5rem;">
                                     <h4 style="text-align: center; color: var(--text-main); font-size: 0.95rem; margin-bottom: 1rem; font-weight: 500;">SAVED BY COUNTRY</h4>
@@ -285,11 +359,13 @@ If you find it useful, please share it so it can reach more people. Also, feel f
 
             const style = getComputedStyle(document.body);
             const colorAll = style.getPropertyValue('--accent-text').trim() || '#3730a3';
-            const colorSaved = style.getPropertyValue('--heart-active').trim() || '#ef4444';
             const colorText = style.getPropertyValue('--text-main').trim() || '#0f172a';
             const colorGrid = style.getPropertyValue('--border-color').trim() || '#e2e8f0';
+            
+            const colorSavedBg = 'rgba(177, 156, 217, 0.9)';
+            const colorSavedBorder = 'rgba(142, 114, 190, 1)';
 
-            const renderChart = (canvasId, dataArray, barColor) => {
+            const renderChart = (canvasId, dataArray, barColorBg, barColorBorder = null) => {
                 const ctx = document.getElementById(canvasId);
                 if (!ctx) return;
                 new Chart(ctx, {
@@ -298,7 +374,9 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                         labels: dataArray.map(item => item[0]),
                         datasets: [{
                             data: dataArray.map(item => item[1]),
-                            backgroundColor: barColor,
+                            backgroundColor: barColorBg,
+                            borderColor: barColorBorder || barColorBg,
+                            borderWidth: barColorBorder ? 1 : 0,
                             borderRadius: 4
                         }]
                     },
@@ -324,8 +402,8 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                 renderChart('chart-all-loc', allLocData, colorAll);
                 renderChart('chart-all-cat', allCatData, colorAll);
                 if (savedCountTotal > 0) {
-                    renderChart('chart-saved-loc', savedLocData, colorSaved);
-                    renderChart('chart-saved-cat', savedCatData, colorSaved);
+                    renderChart('chart-saved-loc', savedLocData, colorSavedBg, colorSavedBorder);
+                    renderChart('chart-saved-cat', savedCatData, colorSavedBg, colorSavedBorder);
                 }
             }, 50);
         }
@@ -350,24 +428,31 @@ If you find it useful, please share it so it can reach more people. Also, feel f
         }
 
         const searchText = document.getElementById('search-input').value.toUpperCase();
-        const loc = document.getElementById('location-select').value.toUpperCase();
+        
+        const checkedLocationBoxes = document.querySelectorAll('#location-items input[type="checkbox"]:checked');
+        const selectedLocations = Array.from(checkedLocationBoxes).map(cb => cb.value.toUpperCase());
+
         const field = fieldSelect.value.toUpperCase();
         const subField = subcategorySelect.value.toUpperCase();
 
         currentFilteredJobs = jobsData.filter(job => {
             if (currentTab === 'kaydedilenler') {
                 if (!savedJobs.includes(job.id)) return false;
+            } else if (currentTab === 'newly_added') {
+                if (job.tab === 'about' || job.tab === 'analytics' || job.tab === 'feedback') return false;
             } else {
-                if (job.tab !== currentTab && currentTab !== 'about' && currentTab !== 'analytics' && currentTab !== 'recommendations') return false;
+                if (job.tab !== currentTab && currentTab !== 'about' && currentTab !== 'analytics' && currentTab !== 'feedback') return false;
             }
 
             const matchSearch = job.company.includes(searchText) || 
-                                job.location.includes(searchText) ||
+                                job.location.toUpperCase().includes(searchText) ||
                                 job.category.includes(searchText) ||
                                 job.subcategory.some(sub => sub.includes(searchText)) ||
                                 job.subcategory2.some(sub => sub.includes(searchText));
             
-            const matchLoc = loc === 'ALL' || job.location.includes(loc);
+            const matchLoc = selectedLocations.length === 0 || 
+                             selectedLocations.includes('ALL') || 
+                             selectedLocations.some(loc => job.location.toUpperCase().includes(loc));
             
             let matchField = false;
             if (field === 'ALL') {
@@ -388,6 +473,11 @@ If you find it useful, please share it so it can reach more people. Also, feel f
 
             return matchSearch && matchLoc && matchField;
         });
+
+        if (currentTab === 'newly_added') {
+            currentFilteredJobs.sort((a, b) => b.id - a.id);
+            currentFilteredJobs = currentFilteredJobs.slice(0, 100);
+        }
     }
 
     if (currentFilteredJobs.length === 0 && resetPage) {
@@ -414,6 +504,7 @@ If you find it useful, please share it so it can reach more people. Also, feel f
         const card = document.createElement('div');
         card.className = 'job-card';
         card.setAttribute('data-id', job.id);
+        card.setAttribute('tabindex', '0'); 
         
         card.innerHTML = `
             <button class="save-btn ${isSaved ? 'saved' : ''}" aria-label="Save">
@@ -488,7 +579,39 @@ jobContainer.addEventListener('click', (e) => {
     }
 });
 
+// --- FEEDBACK GÖNDERME FONKSİYONU ---
+window.submitFeedback = function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    submitBtn.textContent = "SENDING...";
+    submitBtn.disabled = true;
+
+    fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    })
+    .then(() => {
+        form.innerHTML = `
+            <div style='color: #10b981; font-weight: 600; text-align: center; padding: 2rem; border: 1px dashed #10b981; border-radius: 6px;'>
+                ✓ THANK YOU!
+                <br>
+                <span style='color: var(--text-muted); font-size: 0.9rem; font-weight: 400;'>Your message has been sent successfully.</span>
+            </div>
+        `;
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        submitBtn.textContent = "ERROR. TRY AGAIN";
+        submitBtn.disabled = false;
+    });
+};
+
 function openModal(jobId) {
+    currentOpenJobId = jobId; 
     const job = jobsData.find(j => j.id === jobId);
     if (!job) return;
 
@@ -498,7 +621,7 @@ function openModal(jobId) {
     let contactHTML = '';
     if (job.contact && job.contact.trim() !== '') {
         contactHTML = `
-            <div class="modal-section" style="margin-bottom: 1.5rem; padding: 1rem; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px;">
+            <div class="modal-section" style="margin-bottom: 1.5rem; padding: 1rem; background-color: var(--box-bg); border: 1px solid var(--border-color); border-radius: 6px;">
                 <h4 style="color: var(--accent-text); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                     CONTACT INFO
@@ -517,11 +640,11 @@ function openModal(jobId) {
         
         <div class="modal-section">
             <h4>DESCRIPTION</h4>
-            <p>${job.description || 'NO DESCRIPTION PROVIDED.'}</p>
+            <p>${job.description || 'No description provided.'}</p>
         </div>
         <div class="modal-section">
             <h4>REQUIREMENTS & DETAILS</h4>
-            <p>${job.requirements || 'NOT SPECIFIED.'}</p>
+            <p>${job.requirements || 'Not specified.'}</p>
         </div>
         
         ${contactHTML}
@@ -552,17 +675,61 @@ function openModal(jobId) {
 
     if (job.link && job.link.trim() !== "") {
         contentHTML += `
-            <div class="modal-section" style="margin-top: 1.5rem;">
-                <a href="${job.link}" target="_blank" rel="noopener noreferrer" class="copy-btn" style="display: block; text-align: center; text-decoration: none; background-color: var(--text-main);">
-                    GO TO TARGET LINK
+            <div class="modal-section" style="margin-top: 1.5rem; text-align: center;">
+                <a href="${job.link}" target="_blank" rel="noopener noreferrer" class="copy-btn" style="display: block; text-decoration: none; background-color: var(--text-main);">
+                    GO TO WEBSITE
                 </a>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; word-break: break-all;">
+                    🔗 ${job.link}
+                </div>
             </div>
         `;
     }
 
+    contentHTML += `
+        <div class="modal-nav-hint">
+            <button class="modal-nav-btn" onclick="navigateModal(-1)" aria-label="Previous">
+                ${leftArrowSVG} <span class="nav-text"><kbd>A</kbd> / <kbd>←</kbd> PREV</span>
+            </button>
+            <button id="modal-report-btn" class="report-btn" data-company="${job.company}" data-id="${job.id}" aria-label="Report an issue">
+                ${flagSVG} REPORT
+            </button>
+            <button class="modal-nav-btn" onclick="navigateModal(1)" aria-label="Next">
+                <span class="nav-text">NEXT <kbd>→</kbd> / <kbd>D</kbd></span> ${rightArrowSVG}
+            </button>
+        </div>
+    `;
+
     modalBody.innerHTML = contentHTML;
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden'; 
+    document.querySelector('.modal-content').scrollTop = 0; 
+
+    const modalReportBtn = document.getElementById('modal-report-btn');
+    if (modalReportBtn) {
+        modalReportBtn.addEventListener('click', (e) => {
+            modalReportBtn.innerHTML = '✓ THANKS!';
+            modalReportBtn.classList.add('success-state');
+            modalReportBtn.disabled = true;
+            modalReportBtn.style.cursor = 'default';
+
+            const companyName = modalReportBtn.getAttribute('data-company');
+            const clickedJobId = modalReportBtn.getAttribute('data-id');
+
+            const formData = new URLSearchParams();
+            formData.append("form-name", "feedback-form");
+            formData.append("topic", "REPORT_ERROR");
+            formData.append("company_name", companyName); // Şirket adı ayrı alan olarak gidiyor
+            formData.append("company_id", clickedJobId);     // Şirket ID'si ayrı alan olarak gidiyor
+            formData.append("message", `Kullanıcı "${companyName}" (ID: #${clickedJobId}) adlı şirket için hata bildiriminde bulundu.`);
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData.toString()
+            }).catch(err => console.error("Rapor gönderilemedi:", err));
+        });
+    }
 
     const templateSelector = document.getElementById('template-selector');
     const mailTextElement = document.getElementById('mail-text');
@@ -596,9 +763,26 @@ function openModal(jobId) {
     }
 }
 
+function navigateModal(direction) {
+    if (currentFilteredJobs.length === 0) return;
+    const currentIndex = currentFilteredJobs.findIndex(job => job.id === currentOpenJobId);
+    if (currentIndex === -1) return;
+
+    let newIndex = currentIndex + direction;
+    
+    if (newIndex >= currentFilteredJobs.length) {
+        newIndex = 0;
+    } else if (newIndex < 0) {
+        newIndex = currentFilteredJobs.length - 1;
+    }
+
+    openModal(currentFilteredJobs[newIndex].id);
+}
+
 function closeModal() {
     modal.classList.add('hidden');
     document.body.style.overflow = 'auto';
+    currentOpenJobId = null; 
 }
 closeModalBtn.addEventListener('click', closeModal);
 modalOverlay.addEventListener('click', closeModal);
@@ -628,7 +812,74 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-const filterInputs = document.querySelectorAll('.filter-input');
+const filterInputs = document.querySelectorAll('.filter-input:not(#location-select)');
 filterInputs.forEach(el => el.addEventListener('input', () => renderJobs(true)));
+
+// --- KLAVYE KISAYOLLARI ETKİLEŞİMİ ---
+jobContainer.addEventListener('keydown', (e) => {
+    if (e.target.id === 'load-more-btn') {
+        if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w' || e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+            e.preventDefault();
+            const cards = Array.from(jobContainer.querySelectorAll('.job-card'));
+            if (cards.length > 0) {
+                cards[cards.length - 1].focus(); 
+            }
+        }
+        return; 
+    }
+
+    const card = e.target.closest('.job-card');
+    if (!card) return;
+
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        card.click();
+        return;
+    }
+
+    const cards = Array.from(jobContainer.querySelectorAll('.job-card'));
+    const index = cards.indexOf(card);
+    if (index === -1) return;
+
+    const gridStyle = window.getComputedStyle(jobContainer);
+    const columns = gridStyle.gridTemplateColumns.trim().split(/\s+/).length;
+    let nextIndex = null;
+
+    if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+        nextIndex = index + 1;
+    } else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+        nextIndex = index - 1;
+    } else if (e.key === 'ArrowDown' || e.key.toLowerCase() === 's') {
+        nextIndex = index + columns;
+        
+        if (nextIndex >= cards.length) {
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            if (loadMoreBtn) {
+                e.preventDefault();
+                loadMoreBtn.focus();
+                return;
+            }
+        }
+    } else if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w') {
+        nextIndex = index - columns;
+    }
+
+    if (nextIndex !== null && nextIndex >= 0 && nextIndex < cards.length) {
+        e.preventDefault(); 
+        cards[nextIndex].focus();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('hidden') && currentOpenJobId !== null) {
+        if (e.key === 'Escape') {
+            closeModal();
+        } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+            navigateModal(1);
+        } else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+            navigateModal(-1);
+        }
+    }
+});
 
 fetchJobs();

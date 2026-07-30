@@ -6,7 +6,6 @@
     <title>internErasmus</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Grafikler için Chart.js Kütüphanesi -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -16,6 +15,7 @@
             <div class="logo">intern<span>Erasmus</span></div>
             <nav class="tabs" style="margin-left: 2rem;">
                 <button class="tab-btn active" data-tab="cold">Companies <span id="companies-count">(0)</span></button>
+                <button class="tab-btn" data-tab="newly_added">Recently Added</button>
                 <button class="tab-btn" data-tab="kaydedilenler">Saved Companies <span id="saved-count">(0)</span></button>
             </nav>
         </div>
@@ -38,44 +38,47 @@
             <div class="primary-filters">
                 <input type="text" id="search-input" class="filter-input search-box" placeholder="Search company, keyword...">
                 
-                <select id="location-select" class="filter-input custom-select">
-                    <option value="All">All Locations</option>
-                    <option value="International">International</option>
-                    <option value="Austria">Austria</option>
-                    <option value="Belgium">Belgium</option>
-                    <option value="Bulgaria">Bulgaria</option>
-                    <option value="Croatia">Croatia</option>
-                    <option value="Cyprus">Cyprus</option>
-                    <option value="Czechia">Czechia</option>
-                    <option value="Denmark">Denmark</option>
-                    <option value="Estonia">Estonia</option>
-                    <option value="Finland">Finland</option>
-                    <option value="France">France</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Greece">Greece</option>
-                    <option value="Hungary">Hungary</option>
-                    <option value="Iceland">Iceland</option>
-                    <option value="Ireland">Ireland</option>
-                    <option value="Italy">Italy</option>
-                    <option value="Latvia">Latvia</option>
-                    <option value="Liechtenstein">Liechtenstein</option>
-                    <option value="Lithuania">Lithuania</option>
-                    <option value="Luxembourg">Luxembourg</option>
-                    <option value="Malta">Malta</option>
-                    <option value="Netherlands">Netherlands</option>
-                    <option value="North Macedonia">North Macedonia</option>
-                    <option value="Norway">Norway</option>
-                    <option value="Poland">Poland</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="Romania">Romania</option>
-                    <option value="Serbia">Serbia</option>
-                    <option value="Slovakia">Slovakia</option>
-                    <option value="Slovenia">Slovenia</option>
-                    <option value="Spain">Spain</option>
-                    <option value="Sweden">Sweden</option>
-                    <option value="Türkiye">Türkiye</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                </select>
+                <div class="dropdown-check-list" tabindex="100">
+                    <span class="anchor" id="location-anchor">All Locations</span>
+                    <ul class="items" id="location-items">
+                        <li><label><input type="checkbox" value="All" checked /> <span class="loc-text">All Locations</span></label></li>
+                        <li><label><input type="checkbox" value="International" /> <span class="loc-text">International</span></label></li>
+                        <li><label><input type="checkbox" value="Austria" /> <span class="loc-text">Austria</span></label></li>
+                        <li><label><input type="checkbox" value="Belgium" /> <span class="loc-text">Belgium</span></label></li>
+                        <li><label><input type="checkbox" value="Bulgaria" /> <span class="loc-text">Bulgaria</span></label></li>
+                        <li><label><input type="checkbox" value="Croatia" /> <span class="loc-text">Croatia</span></label></li>
+                        <li><label><input type="checkbox" value="Cyprus" /> <span class="loc-text">Cyprus</span></label></li>
+                        <li><label><input type="checkbox" value="Czechia" /> <span class="loc-text">Czechia</span></label></li>
+                        <li><label><input type="checkbox" value="Denmark" /> <span class="loc-text">Denmark</span></label></li>
+                        <li><label><input type="checkbox" value="Estonia" /> <span class="loc-text">Estonia</span></label></li>
+                        <li><label><input type="checkbox" value="Finland" /> <span class="loc-text">Finland</span></label></li>
+                        <li><label><input type="checkbox" value="France" /> <span class="loc-text">France</span></label></li>
+                        <li><label><input type="checkbox" value="Germany" /> <span class="loc-text">Germany</span></label></li>
+                        <li><label><input type="checkbox" value="Greece" /> <span class="loc-text">Greece</span></label></li>
+                        <li><label><input type="checkbox" value="Hungary" /> <span class="loc-text">Hungary</span></label></li>
+                        <li><label><input type="checkbox" value="Iceland" /> <span class="loc-text">Iceland</span></label></li>
+                        <li><label><input type="checkbox" value="Ireland" /> <span class="loc-text">Ireland</span></label></li>
+                        <li><label><input type="checkbox" value="Italy" /> <span class="loc-text">Italy</span></label></li>
+                        <li><label><input type="checkbox" value="Latvia" /> <span class="loc-text">Latvia</span></label></li>
+                        <li><label><input type="checkbox" value="Liechtenstein" /> <span class="loc-text">Liechtenstein</span></label></li>
+                        <li><label><input type="checkbox" value="Lithuania" /> <span class="loc-text">Lithuania</span></label></li>
+                        <li><label><input type="checkbox" value="Luxembourg" /> <span class="loc-text">Luxembourg</span></label></li>
+                        <li><label><input type="checkbox" value="Malta" /> <span class="loc-text">Malta</span></label></li>
+                        <li><label><input type="checkbox" value="Netherlands" /> <span class="loc-text">Netherlands</span></label></li>
+                        <li><label><input type="checkbox" value="North Macedonia" /> <span class="loc-text">North Macedonia</span></label></li>
+                        <li><label><input type="checkbox" value="Norway" /> <span class="loc-text">Norway</span></label></li>
+                        <li><label><input type="checkbox" value="Poland" /> <span class="loc-text">Poland</span></label></li>
+                        <li><label><input type="checkbox" value="Portugal" /> <span class="loc-text">Portugal</span></label></li>
+                        <li><label><input type="checkbox" value="Romania" /> <span class="loc-text">Romania</span></label></li>
+                        <li><label><input type="checkbox" value="Serbia" /> <span class="loc-text">Serbia</span></label></li>
+                        <li><label><input type="checkbox" value="Slovakia" /> <span class="loc-text">Slovakia</span></label></li>
+                        <li><label><input type="checkbox" value="Slovenia" /> <span class="loc-text">Slovenia</span></label></li>
+                        <li><label><input type="checkbox" value="Spain" /> <span class="loc-text">Spain</span></label></li>
+                        <li><label><input type="checkbox" value="Sweden" /> <span class="loc-text">Sweden</span></label></li>
+                        <li><label><input type="checkbox" value="Türkiye" /> <span class="loc-text">Türkiye</span></label></li>
+                        <li><label><input type="checkbox" value="United Kingdom" /> <span class="loc-text">United Kingdom</span></label></li>
+                    </ul>
+                </div>
 
                 <select id="field-select" class="filter-input custom-select">
                     <option value="All">All Categories</option>
@@ -122,12 +125,20 @@
         </div>
     </div>
 
-    <!-- Netlify'ın formu algılayabilmesi için gerekli görünmez form -->
     <form name="feedback-form" data-netlify="true" netlify-honeypot="bot-field" hidden>
         <input type="text" name="topic" />
         <textarea name="message"></textarea>
     </form>
 
     <script src="script.js"></script>
+
+    
+<form name="feedback-form" netlify hidden>
+    <input type="hidden" name="form-name" value="feedback-form" />
+    <select name="topic"></select>
+    <textarea name="message"></textarea>
+    <input type="text" name="company_name" />
+    <input type="text" name="company_id" />
+</form>
 </body>
 </html>
