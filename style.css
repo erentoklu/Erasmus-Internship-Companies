@@ -66,15 +66,31 @@ body {
     background-color: var(--surface-color); 
     border-bottom: 1px solid var(--border-color); 
 }
+
 .logo { 
     font-size: 1.25rem; 
     font-weight: 700; 
     color: var(--text-main); 
     letter-spacing: -0.5px; 
 }
+
 .logo span { 
     color: var(--accent-text); 
     font-weight: 400; 
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.logo-desc {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    margin-top: 0.1rem;
+    font-weight: 500;
 }
 
 .nav-middle-wrapper {
@@ -108,6 +124,7 @@ body {
     font-weight: 500; 
     white-space: nowrap;
 }
+
 .tab-btn.active { color: var(--text-main); font-weight: 600; }
 .tab-btn.active::after { content: ''; position: absolute; bottom: -1.5rem; left: 0; width: 100%; height: 2px; background-color: var(--text-main); }
 #saved-count { font-size: 0.8rem; background-color: var(--accent-light); color: var(--accent-text); padding: 2px 8px; border-radius: 12px; margin-left: 4px; font-weight: 600; }
@@ -123,6 +140,7 @@ body {
     display: flex; 
     align-items: center; 
 }
+
 .theme-btn:hover { background-color: var(--hover-bg); color: var(--text-main); }
 
 .container { display: flex; flex-direction: column; padding: 3rem 5%; max-width: 1200px; margin: 0 auto; }
@@ -148,6 +166,7 @@ body {
     flex: 1;
     min-width: 200px;
 }
+
 .filter-input:focus { border-color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent-light); }
 
 select.custom-select {
@@ -169,6 +188,7 @@ select.custom-select {
     display: flex;
     flex-direction: column;
 }
+
 .dropdown-check-list .anchor {
     position: relative;
     cursor: pointer;
@@ -192,6 +212,7 @@ select.custom-select {
     text-overflow: ellipsis;
     transition: all 0.2s ease;
 }
+
 .dropdown-check-list .anchor:focus, .dropdown-check-list.visible .anchor { border-color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent-light); }
 .dropdown-check-list .items {
     padding: 0.5rem;
@@ -211,6 +232,7 @@ select.custom-select {
     list-style: none;
     margin-top: 5px;
 }
+
 .dropdown-check-list.visible .items { display: block; }
 .dropdown-check-list .items li { padding: 0.3rem 0; }
 .dropdown-check-list .items label {
@@ -221,6 +243,7 @@ select.custom-select {
     cursor: pointer;
     color: var(--text-main);
 }
+
 .dropdown-check-list .items label:hover { color: var(--accent-text); }
 
 .advanced-btn { padding: 0.75rem 1.2rem; background: var(--surface-color); border: 1px solid var(--input-border); border-radius: 6px; color: var(--text-main); font-family: inherit; cursor: pointer; transition: all 0.2s ease; font-weight: 500; }
@@ -244,6 +267,7 @@ select.custom-select {
     min-width: 0;
     word-wrap: break-word;
 }
+
 .job-card:hover { border-color: var(--text-main); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); }
 .job-card:focus-visible { border-color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent-light); }
 
@@ -267,11 +291,13 @@ select.custom-select {
     font-family: inherit;
     opacity: 0.7;
 }
+
 .report-btn:hover {
     background: rgba(239, 68, 68, 0.1); 
     color: #ef4444; 
     opacity: 1;
 }
+
 .report-btn.success-state {
     color: #10b981; 
     background: rgba(16, 185, 129, 0.1);
@@ -287,10 +313,6 @@ select.custom-select {
 
 .job-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: 700; color: var(--text-main); line-height: 1.3; margin-top: 0.5rem; }
 .job-title svg { flex-shrink: 0; color: var(--text-muted); }
-
-.job-footer { margin-top: 0.4rem; margin-bottom: auto; }
-.job-location { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
-.job-tags { font-size: 0.8rem; color: var(--text-muted); }
 
 .empty-state { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 1rem; text-align: center; color: var(--text-muted); }
 .empty-state svg { margin-bottom: 1rem; color: var(--text-muted); }
@@ -320,6 +342,7 @@ select.custom-select {
     padding-top: 1rem;
     border-top: 1px dashed var(--border-color);
 }
+
 .modal-nav-btn {
     background: transparent;
     border: none;
@@ -333,10 +356,12 @@ select.custom-select {
     font-weight: 600;
     opacity: 0.6;
 }
+
 .modal-nav-btn:hover {
     color: var(--text-main);
     opacity: 1;
 }
+
 .modal-nav-btn kbd {
     background-color: var(--box-bg);
     border: 1px solid var(--border-color);
@@ -367,7 +392,7 @@ select.custom-select {
         padding: 1rem 5%;
         gap: 1rem;
     }
-    .logo {
+    .logo-container {
         flex: 1 1 auto;
     }
     .theme-btn {

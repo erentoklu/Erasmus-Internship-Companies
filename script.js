@@ -26,7 +26,6 @@ const modalBody = document.getElementById('modal-body');
 const fieldSelect = document.getElementById('field-select');
 const subcategorySelect = document.getElementById('subcategory-select');
 
-// --- METİN FORMATLAMA FONKSİYONLARI ---
 function toTitleCase(str) {
     if (!str) return "";
     return str.split(' ').map(word => {
@@ -64,7 +63,6 @@ function cleanCompanyName(name) {
     return cleaned;
 }
 
-// --- KARANLIK MOD (DEFAULT) ---
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'dark' || savedTheme === null) {
     document.body.classList.add('dark-mode');
@@ -239,14 +237,17 @@ function renderJobs(resetPage = true) {
 
                     <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem;">WHAT IS THIS WEBSITE?</h3>
                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                       I originally built this website to help myself and my friends find Erasmus internships. But it's definitely not just for Erasmus. You can also utilize it to find jobs and other internships in Europe, too.
+                     I initially built this website to help my friends and myself find Erasmus internships. Everyone I talked to had to contact 100+ companies, and only a few of them received replies. In the end, they found their internships by emailing so many companies.
 
-The main goal here is to save you time. The site is all about simplicity and works exactly like an interactive Excel table. It acts as a quick search engine where you can just open the page and start doing your research right away.
+However, finding a company that meets your criteria takes a lot of time. So here, I share my database as an interactive Excel table. By filtering based on your criteria and using this website as a search engine, you can save a lot of time and find opportunities more easily. You can also use it to find job opportunities, not just Erasmus internships.
 
-If you find it useful, please share it so it can reach more people. Also, feel free to leave feedback to help it grow. Best of luck with your search!
+If you find it useful, please share this website so it can reach more people. Also, feel free to leave feedback to help it grow.
+
+Best of luck with your search!
+
                     </p>
 
-                    <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem;">Your data is yours</h3>
+                    <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">YOUR DATA IS YOURS</h3>
                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8;">
                         No account creation is required. Every company you save is stored strictly on your own device's browser (localStorage). We do not track, store, or sell your personal data.
                     </p>
@@ -521,10 +522,10 @@ If you find it useful, please share it so it can reach more people. Also, feel f
                 ${companySVG}
                 ${job.company || 'UNKNOWN COMPANY'}
             </h3>
-            <div class="job-footer" style="position: relative;">
-                <span class="job-location">${job.location || 'LOCATION NOT SPECIFIED'}</span>
+            <div class="job-footer" style="margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; padding-top: 1rem;">
+                <span class="job-location" style="font-size: 0.85rem; color: var(--text-main); font-weight: 500;">${job.location || 'LOCATION NOT SPECIFIED'}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.6; font-weight: 500;">#${job.id}</span>
             </div>
-            <span style="position: absolute; bottom: 0.8rem; right: 1rem; font-size: 0.75rem; color: var(--text-muted); opacity: 0.6; font-weight: 500;">#${job.id}</span>
         `;
         jobContainer.appendChild(card);
     });
@@ -781,6 +782,7 @@ function closeModal() {
     document.body.style.overflow = 'auto';
     currentOpenJobId = null; 
 }
+
 closeModalBtn.addEventListener('click', closeModal);
 modalOverlay.addEventListener('click', closeModal);
 
@@ -877,5 +879,16 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+const logoLink = document.getElementById('logo-link');
+if (logoLink) {
+    logoLink.addEventListener('click', () => {
+        const coldTab = document.querySelector('.tab-btn[data-tab="cold"]');
+        if (coldTab && currentTab !== 'cold') {
+            coldTab.click();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+}
 
 fetchJobs();

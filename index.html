@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>internErasmus</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.1">
     <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body class="dark-mode">
 
-    <!-- Header -->
     <header class="header">
-        <div class="logo">intern<span>Erasmus</span></div>
+        <div class="logo-container" id="logo-link" title="Go to Companies">
+            <div class="logo">intern<span>Erasmus</span></div>
+            <div class="logo-desc">Find Erasmus internship companies</div>
+        </div>
         
         <div class="nav-middle-wrapper">
             <div class="tabs-left">
@@ -30,22 +30,16 @@
         </div>
 
         <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
-            <!-- Moon Icon -->
             <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <!-- Sun Icon -->
             <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </button>
     </header>
 
-    <!-- Main Container -->
     <main class="container">
-        <!-- Search & Filters Section -->
         <section class="search-filter-section">
             <div class="primary-filters">
-                <!-- Search Input -->
                 <input type="text" id="search-input" class="filter-input" placeholder="Search company, keyword...">
 
-                <!-- Location Dropdown Checklist -->
                 <div class="dropdown-check-list">
                     <span class="anchor" id="location-anchor">All Locations</span>
                     <ul class="items" id="location-items">
@@ -64,7 +58,6 @@
                     </ul>
                 </div>
 
-                <!-- Category / Field Select -->
                 <select id="field-select" class="filter-input custom-select">
                     <option value="All" selected>All Categories</option>
                     <option value="Engineering">Engineering</option>
@@ -73,7 +66,6 @@
                     <option value="Art">Art</option>
                 </select>
 
-                <!-- Subcategory Select (for Engineering) -->
                 <select id="subcategory-select" class="filter-input custom-select hidden">
                     <option value="All" selected>All Subcategories</option>
                     <option value="Electrical">Electrical</option>
@@ -85,26 +77,21 @@
             </div>
         </section>
 
-        <!-- Job Board Grid -->
         <div class="job-board">
             <div class="job-grid" id="job-container">
-                <!-- Dynamic cards will be rendered here -->
             </div>
         </div>
     </main>
 
-    <!-- Modal -->
     <div class="modal hidden" id="job-modal">
         <div class="modal-overlay"></div>
         <div class="modal-content" tabindex="0">
             <button class="modal-close-btn" id="close-modal">&times;</button>
             <div id="modal-body">
-                <!-- Dynamic modal content -->
             </div>
         </div>
     </div>
 
-    <!-- Netlify Form Tanımlama (Gizli Statik Form) -->
     <form name="feedback-form" netlify hidden>
         <input type="hidden" name="form-name" value="feedback-form" />
         <select name="topic"></select>
@@ -113,9 +100,7 @@
         <input type="text" name="company_id" />
     </form>
 
-    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Main Script -->
     <script src="script.js"></script>
 </body>
 </html>
