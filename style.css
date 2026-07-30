@@ -389,7 +389,7 @@ select.custom-select {
 @media (max-width: 992px) {
     .header {
         flex-wrap: wrap;
-        padding: 1rem 5%;
+        padding: 1.2rem 5%;
         gap: 1rem;
     }
     .logo-container {
@@ -398,24 +398,27 @@ select.custom-select {
     .theme-btn {
         order: 2;
     }
+    /* Burada grid (tablo) yapısına geçiyoruz */
     .nav-middle-wrapper {
         order: 3;
         width: 100%;
-        margin: 0; 
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 0.8rem;
+        margin: 0.8rem 0 0 0; 
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 Sütunlu düzen */
+        gap: 1rem; /* Satır ve sütunlar arası boşluk */
     }
+    /* Alt gruplandırmaları devre dışı bırakıp ana tabloya dahil ediyoruz */
     .tabs-left, .tabs-right {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-        justify-content: flex-start;
+        display: contents; 
     }
     .tab-btn {
         font-size: 0.9rem;
-        padding-bottom: 0.2rem;
+        white-space: normal;
+        text-align: left; /* Yazıları sola yaslıyoruz */
+        padding-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
     }
     .tab-btn.active::after {
         bottom: -0.2rem;
