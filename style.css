@@ -37,13 +37,8 @@ body.dark-mode {
     --box-bg: #162238;
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Sayfanın sağa kaymasını (horizontal scroll) kesin olarak engeller */
 html, body {
     max-width: 100vw;
     overflow-x: hidden;
@@ -59,7 +54,6 @@ body {
 
 .hidden { display: none !important; }
 
-/* Header & Gruplandırma */
 .header { 
     display: flex; 
     align-items: center; 
@@ -79,7 +73,6 @@ body {
     font-weight: 400; 
 }
 
-/* Orta Kısım: İki Grubu Ayıran ve Büyük Boşluk Bırakan Yapı */
 .nav-middle-wrapper {
     display: flex;
     align-items: center;
@@ -128,7 +121,6 @@ body {
 }
 .theme-btn:hover { background-color: var(--hover-bg); color: var(--text-main); }
 
-/* Filters */
 .container { display: flex; flex-direction: column; padding: 3rem 5%; max-width: 1200px; margin: 0 auto; }
 .search-filter-section { margin-bottom: 3rem; display: flex; flex-direction: column; }
 .primary-filters { 
@@ -230,7 +222,6 @@ select.custom-select {
 .advanced-btn { padding: 0.75rem 1.2rem; background: var(--surface-color); border: 1px solid var(--input-border); border-radius: 6px; color: var(--text-main); font-family: inherit; cursor: pointer; transition: all 0.2s ease; font-weight: 500; }
 .advanced-btn.active, .advanced-btn:hover, .advanced-btn:focus-visible { background-color: var(--accent-light); color: var(--accent-text); border-color: var(--accent-text); outline: none; box-shadow: 0 0 0 2px var(--accent-light); }
 
-/* Job Cards / Grid */
 .job-board { width: 100%; }
 .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
 
@@ -246,7 +237,7 @@ select.custom-select {
     cursor: pointer; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.04); 
     outline: none; 
-    min-width: 0; /* İçerikteki uzun metinlerin kartı esnetip taşırmasını önler */
+    min-width: 0;
     word-wrap: break-word;
 }
 .job-card:hover { border-color: var(--text-main); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); }
@@ -256,7 +247,6 @@ select.custom-select {
 .save-btn:hover { transform: scale(1.1); color: var(--heart-active); }
 .save-btn.saved { color: var(--heart-active); }
 
-/* Report Error Button */
 .report-btn {
     background: transparent;
     border: none;
@@ -284,7 +274,6 @@ select.custom-select {
     opacity: 1;
 }
 
-/* Card Headers & Tags */
 .job-header { display: flex; justify-content: space-between; align-items: flex-start; padding-right: 2rem; margin-bottom: 0.8rem; }
 .job-tags-top { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
 .tags-group-primary, .tags-group-secondary { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
@@ -299,13 +288,11 @@ select.custom-select {
 .job-location { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
 .job-tags { font-size: 0.8rem; color: var(--text-muted); }
 
-/* Empty & Loading States */
 .empty-state { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 1rem; text-align: center; color: var(--text-muted); }
 .empty-state svg { margin-bottom: 1rem; color: var(--text-muted); }
 .spinner { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
-/* Modal */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; }
 .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); }
 .modal-content { position: relative; background-color: var(--surface-color); border: 1px solid var(--border-color); padding: 3rem; border-radius: 8px; max-width: 650px; width: 90%; max-height: 85vh; overflow-y: auto; z-index: 1001; box-shadow: 0 20px 40px rgba(0,0,0,0.3); outline: none; }
@@ -321,7 +308,6 @@ select.custom-select {
 .copy-btn:hover { background-color: var(--text-company); }
 .copy-btn.success { background-color: #10b981; color: #fff; }
 
-/* Modal Bottom Navigation */
 .modal-nav-hint {
     display: flex;
     align-items: center;
@@ -371,7 +357,6 @@ select.custom-select {
     border: 1px solid var(--accent-text);
 }
 
-/* Tablet ve küçük ekranlar için Header düzenlemesi */
 @media (max-width: 992px) {
     .header {
         flex-wrap: wrap;
@@ -380,23 +365,23 @@ select.custom-select {
     .nav-middle-wrapper {
         order: 3;
         width: 100%;
-        max-width: 100%; /* Flex item'ın kapsayıcıyı taşırmasını engeller */
+        max-width: 100%;
         margin: 1rem 0 0 0; 
-        overflow-x: auto;
-        justify-content: flex-start;
-        gap: 1.5rem;
-        padding-bottom: 0.5rem;
-        -webkit-overflow-scrolling: touch;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
     }
     .tabs-left, .tabs-right {
-        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem;
     }
-    .nav-middle-wrapper::-webkit-scrollbar {
-        display: none;
+    .tab-btn {
+        font-size: 0.9rem;
+        white-space: normal;
     }
 }
 
-/* Telefon ekranları için düzenlemeler */
 @media (max-width: 768px) { 
     .container { 
         padding: 1.5rem 5%;
@@ -412,8 +397,6 @@ select.custom-select {
     .job-grid {
         grid-template-columns: 1fr;
     }
-
-    /* JS ile doğrudan (inline) verilen padding ve min-width değerlerini mobilde ezmek için */
     div[style*="padding: 3rem"] {
         padding: 1.5rem !important;
     }
@@ -432,5 +415,11 @@ select.custom-select {
     }
     .job-title {
         font-size: 1.1rem;
+    }
+    .tab-btn {
+        font-size: 0.85rem;
+    }
+    .tabs-left, .tabs-right {
+        gap: 0.5rem;
     }
 }
