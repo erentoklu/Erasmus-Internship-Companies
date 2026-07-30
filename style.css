@@ -37,7 +37,17 @@ body.dark-mode {
     --box-bg: #162238;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+/* Sayfanın sağa kaymasını (horizontal scroll) kesin olarak engeller */
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -236,6 +246,8 @@ select.custom-select {
     cursor: pointer; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.04); 
     outline: none; 
+    min-width: 0; /* İçerikteki uzun metinlerin kartı esnetip taşırmasını önler */
+    word-wrap: break-word;
 }
 .job-card:hover { border-color: var(--text-main); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); }
 .job-card:focus-visible { border-color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent-light); }
@@ -368,6 +380,7 @@ select.custom-select {
     .nav-middle-wrapper {
         order: 3;
         width: 100%;
+        max-width: 100%; /* Flex item'ın kapsayıcıyı taşırmasını engeller */
         margin: 1rem 0 0 0; 
         overflow-x: auto;
         justify-content: flex-start;
@@ -398,6 +411,17 @@ select.custom-select {
     } 
     .job-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* JS ile doğrudan (inline) verilen padding ve min-width değerlerini mobilde ezmek için */
+    div[style*="padding: 3rem"] {
+        padding: 1.5rem !important;
+    }
+    div[style*="padding: 2.5rem"] {
+        padding: 1.5rem !important;
+    }
+    div[style*="min-width: 300px"] {
+        min-width: 100% !important;
     }
 }
 
