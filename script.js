@@ -1,5 +1,658 @@
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxjDVIB52kQD7liMwXesoyYDlgDpzIKSoVx1ZPb1LYJCjdSIjS2UObPb7i0t88yCQaK/exec";
 
+const initialJobsData = [
+    {
+        "id": 1,
+        "company": "MENTOR",
+        "location": "Erkrath, Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["ELECTRONIC COMPONENTS"],
+        "tab": "cold",
+        "description": "Integrated lighting solutions and precision HMI components.",
+        "requirements": "Background in electrical engineering or industrial design might be expected. German or English skills could be a plus.",
+        "contact": "",
+        "link": "https://www.mentor.de.com"
+    },
+    {
+        "id": 2,
+        "company": "2N TELEKOMUNIKACE",
+        "location": "Prague, Czechia",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["TELECOMMUNICATIONS"],
+        "tab": "cold",
+        "description": "IP-based door intercoms and access control systems.",
+        "requirements": "Experience in IP networking or telecommunications might be required. Czech or English language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.2n.com"
+    },
+    {
+        "id": 3,
+        "company": "ABN",
+        "location": "Neuenstadt, Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["ELECTRICAL DISTRIBUTION"],
+        "tab": "cold",
+        "description": "Electrical distribution systems and switchgear/meter panels.",
+        "requirements": "Studies in electrical distribution or switchgear design might be needed. German proficiency could be a plus.",
+        "contact": "",
+        "link": "https://www.abn-electro.com"
+    },
+    {
+        "id": 4,
+        "company": "ACCORDIA",
+        "location": "Thessaloniki, Greece",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["CABLE MANUFACTURING"],
+        "tab": "cold",
+        "description": "KNX-certified and coaxial cable manufacturing for building automation.",
+        "requirements": "Knowledge of building automation or cabling systems might be required. Greek language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.accordia.gr"
+    },
+    {
+        "id": 5,
+        "company": "ADD BULGARIA",
+        "location": "Plovdiv, Bulgaria",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL", "COMPUTER", "SOFTWARE"],
+        "subcategory2": ["IOT / ENERGY"],
+        "tab": "cold",
+        "description": "Smart monitoring and IoT solutions for energy and city infrastructures.",
+        "requirements": "Experience in IoT or embedded systems might be expected. English proficiency is expected; Bulgarian could be a plus.",
+        "contact": "",
+        "link": "https://www.add-bg.com"
+    },
+    {
+        "id": 6,
+        "company": "AJAX SYSTEMS",
+        "location": "International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRONICS", "SOFTWARE", "MANAGEMENT", "INDUSTRIAL"],
+        "subcategory2": [],
+        "tab": "cold",
+        "description": "A European tech company and major manufacturer of professional security systems and smart home devices.",
+        "requirements": "Background in electronics, software engineering, or IoT. Good command of English.",
+        "contact": "",
+        "link": "https://ajax.systems/"
+    },
+    {
+        "id": 7,
+        "company": "ARLINE",
+        "location": "Italy",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Italian manufacturer specializing in cable entry probes, fiberglass rods, and industrial cable pulling systems.",
+        "requirements": "Studies in electrical or industrial engineering. Basic knowledge of Italian is a plus.",
+        "contact": "",
+        "link": "https://www.arline.it/"
+    },
+    {
+        "id": 8,
+        "company": "ASSA ABLOY SICHERHEITSTECHNIK",
+        "location": "Germany, International",
+        "category": "ENGINEERING",
+        "subcategory": ["MECHANICAL"],
+        "subcategory2": ["ELECTRICAL"],
+        "tab": "cold",
+        "description": "Global leader in access solutions, focusing on electronic locks, security doors, and biometrics.",
+        "requirements": "Background in mechatronics, mechanical, or electrical engineering.",
+        "contact": "",
+        "link": "https://www.assaabloy.com/de/de"
+    },
+    {
+        "id": 9,
+        "company": "AY-KA ELEKTRIK EMLAK INSAAT",
+        "location": "Türkiye",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": [],
+        "tab": "cold",
+        "description": "Turkish company operating in the electrical materials sector, providing diverse electrical installation products.",
+        "requirements": " Background in electrical engineering. Turkish language skills may required.",
+        "contact": "",
+        "link": "https://www.aykaelektrik.com.tr/"
+    },
+    {
+        "id": 10,
+        "company": "BACNET INTEREST GROUP EUROPE E.V",
+        "location": "Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["COMPUTER", "AUTOMATION", "SOFTWARE", "IOT"],
+        "subcategory2": ["ELECTRICAL"],
+        "tab": "cold",
+        "description": "European association promoting the BACnet communication protocol for smart building automation.",
+        "requirements": "Understanding of building automation, IoT, and network protocols.",
+        "contact": "",
+        "link": "https://big-eu.org/"
+    },
+    {
+        "id": 11,
+        "company": "BALS ELEKTROTECHNIK",
+        "location": "Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "German manufacturer of industrial plugs, sockets, and power distribution systems for the global market.",
+        "requirements": "Knowledge in electrical engineering or industrial manufacturing.",
+        "contact": "",
+        "link": "https://www.bals.com/de/home"
+    },
+    {
+        "id": 12,
+        "company": "BATTERY-KUTTER",
+        "location": "Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": [],
+        "tab": "cold",
+        "description": "Specialist in battery technology, offering solutions for UPS systems, energy storage, and emergency lighting.",
+        "requirements": "Studies in electrical engineering or energy systems. Interest in battery tech.",
+        "contact": "",
+        "link": "https://www.battery-kutter.de/"
+    },
+    {
+        "id": 13,
+        "company": "BENDER",
+        "location": "Germany",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["ELECTRONICS"],
+        "tab": "cold",
+        "description": "Globally active company producing advanced electrical safety equipment and insulation monitoring devices.",
+        "requirements": "Background in electrical engineering or electronics. Knowledge of power systems.",
+        "contact": "",
+        "link": "https://www.bender.de/"
+    },
+    {
+        "id": 14,
+        "company": "BENDER & WIRTH & CO",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "SALES"],
+        "subcategory2": ["MECHANICAL"],
+        "tab": "cold",
+        "description": "Manufacturer of lampholders, LED connectors, and high-quality electrical connecting systems for the lighting industry.",
+        "requirements": "Background in electrical, mechanical engineering, or technical sales might be needed. German language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.bender-wirth.de/"
+    },
+    {
+        "id": 15,
+        "company": "BIHL + WIEDEMANN",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MANAGEMENT"],
+        "subcategory2": ["SOFTWARE"],
+        "tab": "cold",
+        "description": "Provider of automation solutions and safety technology, specializing in AS-Interface networks.",
+        "requirements": "Studies in automation, software development, or business management may be required. English proficiency is a must, German language skills might be required",
+        "contact": "",
+        "link": "https://www.bihl-wiedemann.de/"
+    },
+    {
+        "id": 16,
+        "company": "BIMER ELECTRIC",
+        "location": "Italy, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "SALES"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Manufacturer focused on energy distribution equipment and busbar trunking systems for industrial applications.",
+        "requirements": "Background in electrical engineering, power distribution, or technical sales might be expected. Italian language skills may be required.",
+        "contact": "",
+        "link": "https://www.bimerelectric.com/"
+    },
+    {
+        "id": 17,
+        "company": "BIRD HOME AUTOMATION",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["COMPUTER", "MANAGEMENT"],
+        "subcategory2": ["SOFTWARE", "SALES"],
+        "tab": "cold",
+        "description": "Pioneer in smart home technology, developing IP video intercoms and access control systems under the DoorBird brand.",
+        "requirements": "Experience in software development, IoT, or sales management could be a plus. English proficiency might be needed.",
+        "contact": "",
+        "link": "https://www.doorbird.com/"
+    },
+    {
+        "id": 18,
+        "company": "BOTT",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["INDUSTRIAL", "MANAGEMENT"],
+        "subcategory2": ["MECHANICAL"],
+        "tab": "cold",
+        "description": "International provider of integrated solutions for vehicle outfitting, workplace storage, and digitally connected workstations.",
+        "requirements": "Studies in industrial design, mechanical engineering, or business administration may be required. German language skills could be beneficial.",
+        "contact": "",
+        "link": "https://www.bott.com/"
+    },
+    {
+        "id": 19,
+        "company": "HUGO BRENNENSTUHL & CO",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "SALES"],
+        "subcategory2": ["ELECTRONICS"],
+        "tab": "cold",
+        "description": "Major European supplier in power distribution, lighting supply, and smart home solutions for professional and DIY use.",
+        "requirements": "Background in electrical engineering, electronics, or international sales could be a plus. English or German proficiency might be needed.",
+        "contact": "",
+        "link": "https://www.brennenstuhl.com/"
+    },
+    {
+        "id": 20,
+        "company": "CHAUVIN ARNOUX",
+        "location": "France, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MANAGEMENT"],
+        "subcategory2": ["ELECTRONICS", "SALES"],
+        "tab": "cold",
+        "description": "Global specialist in portable measurement equipment, electrical testers, and energy optimization systems. (GmbH is the German branch of the French HQ).",
+        "requirements": "Degree in electrical engineering, electronics, or technical management may be expected. English or German language skills could be required.",
+        "contact": "",
+        "link": "https://www.chauvin-arnoux.com/"
+    },
+    {
+        "id": 21,
+        "company": "CIMCO WERKZEUGE",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["MECHANICAL", "SALES"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Renowned manufacturer of high-quality tools tailored for professionals in the electrical industry.",
+        "requirements": "Background in mechanical engineering, industrial design, or technical sales might be needed. German proficiency could be a plus.",
+        "contact": "",
+        "link": "https://www.cimco.de/"
+    },
+    {
+        "id": 22,
+        "company": "CITEL ELECTRONICS",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "SALES"],
+        "subcategory2": ["ELECTRONICS"],
+        "tab": "cold",
+        "description": "Global specialist in manufacturing surge protectors for various electrical, data, and RF applications.",
+        "requirements": "Degree in electrical engineering, electronics, or business management may be expected. English or German language skills could be required.",
+        "contact": "",
+        "link": "https://citel.de/"
+    },
+    {
+        "id": 23,
+        "company": "DAHUA TECHNOLOGY",
+        "location": "China, International, Europe",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["COMPUTER", "ELECTRONICS"],
+        "subcategory2": ["SALES", "SOFTWARE"],
+        "tab": "cold",
+        "description": "World-leading video-centric smart IoT solution and service provider with a massive global presence.",
+        "requirements": "Experience in computer science, software engineering, or B2B tech sales could be beneficial. English proficiency might be needed.",
+        "contact": "",
+        "link": "https://www.dahuasecurity.com/"
+    },
+    {
+        "id": 24,
+        "company": "DKC EUROPE S.R.L",
+        "location": "Italy, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MANAGEMENT"],
+        "subcategory2": ["INDUSTRIAL", "SALES"],
+        "tab": "cold",
+        "description": "Major producer of cable management systems, metal cabinets, and power distribution solutions.",
+        "requirements": "Studies in electrical engineering, industrial manufacturing, or business management may be required. Italian or English skills could be a plus.",
+        "contact": "",
+        "link": "https://www.dkceurope.com/"
+    },
+    {
+        "id": 25,
+        "company": "DOCTER OPTICS SE",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["MECHANICAL", "SALES"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Innovative manufacturer of optical components and systems, heavily involved in automotive lighting and biometric technologies.",
+        "requirements": "Background in optics, mechanical engineering, or technical sales might be expected. German language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.docteroptics.com/"
+    },
+    {
+        "id": 26,
+        "company": "DOYMA & CO",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["CIVIL", "MECHANICAL"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "Leading developer of sealing and fire protection systems for pipes and cables passing through building structures.",
+        "requirements": "Knowledge of civil engineering, mechanical systems, or B2B sales might be needed. German proficiency could be expected.",
+        "contact": "",
+        "link": "https://www.doyma.de/"
+    },
+    {
+        "id": 27,
+        "company": "DREES",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "SALES"],
+        "subcategory2": ["ELECTRONICS"],
+        "tab": "cold",
+        "description": "Specialist in modern lighting technology, offering customized LED solutions and electronic components.",
+        "requirements": "Studies in electrical engineering, electronics, or business administration may be required. English or German skills could be beneficial.",
+        "contact": "",
+        "link": "https://drees-gmbh.eu/"
+    },
+    {
+        "id": 28,
+        "company": "ELEKTROTECHNISCHE WERKE FRITZ DRIESCHER & SÖHNE",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MANAGEMENT"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Well-established provider of medium and low voltage switchgears and switching devices for power distribution.",
+        "requirements": "Background in electrical engineering, power systems, or industrial management might be expected. German language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.driescher.de/"
+    },
+    {
+        "id": 29,
+        "company": "EAE ELECTRIC",
+        "location": "Türkiye, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "INDUSTRIAL", "LIGHTING"],
+        "subcategory2": ["SALES", "MANAGEMENT"],
+        "tab": "cold",
+        "description": "Prominent manufacturer of busbar power distribution systems, cable trays, and lighting solutions globally.",
+        "requirements": "Degree in electrical or industrial engineering, or international business could be needed. English and Turkish proficiency may be expected.",
+        "contact": "",
+        "link": "https://www.eaeelectric.com/"
+    },
+    {
+        "id": 30,
+        "company": "EATON",
+        "location": "Ireland, Usa, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL"],
+        "subcategory2": ["SOFTWARE", "MANAGEMENT"],
+        "tab": "cold",
+        "description": "Global power management company providing energy-efficient solutions for electrical, hydraulic, and mechanical power.",
+        "requirements": "Experience in electrical engineering, mechanical systems, or corporate management might be needed. English proficiency is likely required.",
+        "contact": "",
+        "link": "https://www.eaton.com/"
+    },
+    {
+        "id": 31,
+        "company": "ELDOLED B.V",
+        "location": "Netherlands, Usa, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "ELECTRONICS"],
+        "subcategory2": ["SOFTWARE", "SALES"],
+        "tab": "cold",
+        "description": "World leader in intelligent LED drivers, focusing on smooth dimming and integration with DALI and DMX protocols for architectural and cinematic lighting.",
+        "requirements": "Background in electrical engineering, embedded electronics, or technical sales might be needed. English language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.eldoled.com/"
+    },
+    {
+        "id": 32,
+        "company": "ELEQ",
+        "location": "Netherlands, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MANAGEMENT"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Manufacturer of current transformers, voltage transformers, and connection boxes for the professional energy market.",
+        "requirements": "Studies in electrical engineering or energy systems may be required. English or Dutch proficiency could be beneficial.",
+        "contact": "",
+        "link": "https://www.eleq.com/"
+    },
+    {
+        "id": 33,
+        "company": "ELETTROCANALI S.P.A",
+        "location": "Italy, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL"],
+        "subcategory2": ["INDUSTRIAL", "SALES"],
+        "tab": "cold",
+        "description": "Italian manufacturer specializing in electrical installation systems, trunking, and enclosures for industrial use.",
+        "requirements": "Background in mechanical engineering, electrical systems, or B2B sales might be expected. Italian or English language skills may be required.",
+        "contact": "",
+        "link": "https://www.elettrocanali.com/"
+    },
+    {
+        "id": 34,
+        "company": "ELSTEEL",
+        "location": "Denmark, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Global supplier of low voltage panel boards, motor control centers, and highly modular electrical enclosures.",
+        "requirements": "Degree in electrical or mechanical engineering could be needed. English language skills are likely expected.",
+        "contact": "",
+        "link": "https://www.elsteel.com/"
+    },
+    {
+        "id": 35,
+        "company": "ERKA KABLO",
+        "location": "Türkiye, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "INDUSTRIAL"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "Manufacturer producing a wide range of low voltage power cables, industrial data cables, and specialized wiring.",
+        "requirements": "Background in electrical engineering or technical sales might be needed. Turkish and English language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.erkakablo.com.tr/"
+    },
+    {
+        "id": 36,
+        "company": "ESAVE",
+        "location": "Switzerland, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "COMPUTER"],
+        "subcategory2": ["SOFTWARE", "SALES"],
+        "tab": "cold",
+        "description": "Swiss company developing intelligent, IoT-based control systems and microcontroller-driven networks for smart street lighting.",
+        "requirements": "Experience in IoT embedded systems, software development, or electrical engineering may be expected. English or German proficiency could be beneficial.",
+        "contact": "",
+        "link": "https://www.esaveag.com/"
+    },
+    {
+        "id": 37,
+        "company": "ETI D.O.O",
+        "location": "Slovenia, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "INDUSTRIAL"],
+        "subcategory2": ["MANAGEMENT"],
+        "tab": "cold",
+        "description": "Leading European provider of products and services in the field of electrical installations, fuses, and switchgear.",
+        "requirements": "Studies in electrical engineering, power distribution, or business management might be required. English proficiency could be needed.",
+        "contact": "",
+        "link": "https://www.etigroup.eu/"
+    },
+    {
+        "id": 38,
+        "company": "EURO TECH GYÁRTÓ ÉS KERESKEDELMI KFT",
+        "location": "Hungary, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRONICS", "COMPUTER", "SOFTWARE"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "Hungarian company supplying security technology, CCTV, access control, and IT infrastructure solutions.",
+        "requirements": "Background in computer science, electronics, or IT sales may be expected. English or Hungarian language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.eurotech.hu/"
+    },
+    {
+        "id": 39,
+        "company": "F-TRONIC",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "Innovative German manufacturer of electrical installation systems, smart meter cabinets, and distribution boards.",
+        "requirements": "Degree in electrical engineering, mechanical systems, or B2B sales might be needed. German language skills could be expected.",
+        "contact": "",
+        "link": "https://www.f-tronic.de/"
+    },
+    {
+        "id": 40,
+        "company": "GBE S.P.A",
+        "location": "Italy, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "INDUSTRIAL"],
+        "subcategory2": ["MANAGEMENT"],
+        "tab": "cold",
+        "description": "Italian company specializing in the production of cast resin and oil-filled transformers and reactors for diverse industrial applications.",
+        "requirements": "Background in electrical engineering, power systems, or industrial management could be a plus. Italian or English proficiency might be required.",
+        "contact": "",
+        "link": "https://www.gbeonline.com/"
+    },
+    {
+        "id": 41,
+        "company": "G. ELETTRIC",
+        "location": "Italy",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL", "AUTOMATION"],
+        "subcategory2": ["INDUSTRIAL"],
+        "tab": "cold",
+        "description": "Italian engineering firm focused on the design, wiring, and manufacturing of electrical panels and industrial automation solutions.",
+        "requirements": "Studies in electrical engineering or industrial automation may be required. Italian language skills could be highly beneficial.",
+        "contact": "",
+        "link": "https://www.gelettric.it/"
+    },
+    {
+        "id": 42,
+        "company": "GEZE",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["MECHANICAL", "ELECTRICAL", "LIGHTING"],
+        "subcategory2": ["SALES", "MANAGEMENT"],
+        "tab": "cold",
+        "description": "Global developer of smart building automation, integrating safety technology and automatic doors with KNX and BMS platforms.",
+        "requirements": "Experience in mechanical engineering, smart buildings, or international sales might be needed. German or English proficiency could be expected.",
+        "contact": "",
+        "link": "https://www.geze.com/"
+    },
+    {
+        "id": 43,
+        "company": "GIGAHERTZ OPTIK",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "MECHANICAL", "LIGHTING"],
+        "subcategory2": ["ELECTRONICS"],
+        "tab": "cold",
+        "description": "Manufacturer of precise light measurement instruments and spectroradiometers, ideal for technical lighting and photometric analysis.",
+        "requirements": "Background in optical engineering, electronics, or physical sciences may be expected. German or English language skills could be a plus.",
+        "contact": "",
+        "link": "https://www.gigahertz-optik.de/"
+    },
+    {
+        "id": 44,
+        "company": "GL OPTIC",
+        "location": "Poland, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "ELECTRONICS", "LIGHTING"],
+        "subcategory2": ["COMPUTER", "SALES"],
+        "tab": "cold",
+        "description": "Provider of smart spectrometers and light measurement solutions, highly relevant for testing LED arrays and industrial lighting systems.",
+        "requirements": "Degree in optical tech, electrical engineering, or software development could be beneficial. English proficiency might be needed.",
+        "contact": "",
+        "link": "https://gloptic.com/"
+    },
+    {
+        "id": 45,
+        "company": "GMP",
+        "location": "France, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["MECHANICAL", "INDUSTRIAL"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "French company involved in industrial equipment, technical manufacturing solutions, and automated systems for various engineering sectors.",
+        "requirements": "Studies in mechanical engineering, industrial management, or technical sales may be required. French language skills could be a big plus.",
+        "contact": "",
+        "link": "https://www.gmp.fr/"
+    },
+    {
+        "id": 46,
+        "company": "FRIEDRICH GÖHRINGER ELEKTROTECHNIK",
+        "location": "Germany",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "INDUSTRIAL", "LIGHTING"],
+        "subcategory2": ["MANAGEMENT"],
+        "tab": "cold",
+        "description": "German specialist in advanced electrical installations, distribution technology, and commercial indoor/outdoor lighting systems.",
+        "requirements": "Background in electrical engineering or technical project management might be expected. German language skills are likely required.",
+        "contact": "",
+        "link": "https://www.goehringer.de/"
+    },
+    {
+        "id": 47,
+        "company": "GOSSEN FOTO- UND LICHTMESSTECHNIK",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRONICS", "MECHANICAL", "LIGHTING"],
+        "subcategory2": ["SALES"],
+        "tab": "cold",
+        "description": "Renowned manufacturer of precision illuminance meters and light testing gear for professional cinematography, architecture, and industry.",
+        "requirements": "Experience in electronics, embedded design, or technical sales could be a plus. German or English proficiency might be needed.",
+        "contact": "",
+        "link": "https://www.gossen-photo.de/"
+    },
+    {
+        "id": 48,
+        "company": "GRAPHISOFT DEUTSCHLAND",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["COMPUTER", "SOFTWARE"],
+        "subcategory2": ["CIVIL", "SALES"],
+        "tab": "cold",
+        "description": "German branch of the global software company developing Archicad, the industry-leading BIM software for architectural design.",
+        "requirements": "Studies in computer science, software engineering, or civil engineering may be required. German language skills could be beneficial.",
+        "contact": "",
+        "link": "https://graphisoft.com/de"
+    },
+    {
+        "id": 49,
+        "company": "HAGER VERTRIEBSGESELLSCHAFT MBH & CO",
+        "location": "Germany, International",
+        "category": "ENGINEERING, BUSINESS",
+        "subcategory": ["ELECTRICAL", "ELECTRONICS", "LIGHTING"],
+        "subcategory2": ["SOFTWARE", "MANAGEMENT"],
+        "tab": "cold",
+        "description": "Global provider of solutions for electrical installations, smart home building automation, and KNX-based energy management.",
+        "requirements": "Background in electrical engineering, IoT software, or business administration might be expected. English or German proficiency could be required.",
+        "contact": "",
+        "link": "https://www.hager.de/"
+    },
+    {
+        "id": 50,
+        "company": "HAKEL SPOL. S R.O",
+        "location": "Czechia, International",
+        "category": "ENGINEERING",
+        "subcategory": ["ELECTRICAL"],
+        "subcategory2": ["HARDWARE"],
+        "tab": "cold",
+        "description": "Czech manufacturer specializing in surge protection devices (SPDs) and insulation monitoring for power grids and telecommunications.",
+        "requirements": "Background in electrical engineering or hardware design might be expected. English or Czech proficiency could be a plus.",
+        "contact": "",
+        "link": "https://www.hakel.com/"
+    }
+];
+
 let jobsData = []; 
 let currentTab = 'cold'; 
 let currentPage = 1;
@@ -26,10 +679,13 @@ const modalBody = document.getElementById('modal-body');
 const fieldSelect = document.getElementById('field-select');
 const subcategorySelect = document.getElementById('subcategory-select');
 
+// Metinleri düzgün formatlamak için
 function toTitleCase(str) {
     if (!str) return "";
+    const acronyms = ["IT", "IOT", "AI", "UX", "UI", "PR", "HR", "R&D", "B2B", "NGO", "3D", "5G", "AV", "EV"];
     return str.split(' ').map(word => {
         if(!word) return "";
+        if (acronyms.includes(word.toUpperCase())) return word.toUpperCase();
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(' ');
 }
@@ -130,8 +786,149 @@ function updateSavedCount() {
     if (savedCount) savedCount.textContent = `(${savedJobs.length})`;
 }
 
+
+function populateDropdowns() {
+    const categoriesSet = new Set();
+    jobsData.forEach(job => {
+        if(job.category) {
+            job.category.split(',').forEach(c => {
+                const trimmed = c.trim().toUpperCase();
+                if (trimmed) categoriesSet.add(trimmed);
+            });
+        }
+    });
+    
+    const uniqueCategories = Array.from(categoriesSet).sort();
+    const currentCategory = fieldSelect.value.toUpperCase();
+    
+    let catHTML = '<option value="ALL">All Categories</option>';
+    uniqueCategories.forEach(cat => {
+        catHTML += `<option value="${cat}">${toTitleCase(cat)}</option>`;
+    });
+    
+    fieldSelect.innerHTML = catHTML;
+    
+    
+    if (uniqueCategories.includes(currentCategory) || currentCategory === 'ALL') {
+        fieldSelect.value = currentCategory === 'ALL' ? 'ALL' : currentCategory;
+    } else {
+        fieldSelect.value = 'ALL';
+    }
+    
+    updateSubcategoryDropdown();
+}
+
+function updateSubcategoryDropdown() {
+    const selectedCategory = fieldSelect.value.toUpperCase();
+    
+    if (selectedCategory === 'ALL') {
+        subcategorySelect.classList.add('hidden');
+        subcategorySelect.innerHTML = '<option value="ALL">All Subcategories</option>';
+        return;
+    }
+    
+    subcategorySelect.classList.remove('hidden');
+    
+    const subSet = new Set();
+    jobsData.forEach(job => {
+        const jobCats = job.category ? job.category.split(',').map(c => c.trim().toUpperCase()) : [];
+        if (jobCats.includes(selectedCategory)) {
+            if (job.subcategory) job.subcategory.forEach(sub => { if(sub) subSet.add(sub.toUpperCase()); });
+            if (job.subcategory2) job.subcategory2.forEach(sub => { if(sub) subSet.add(sub.toUpperCase()); });
+        }
+    });
+    
+    const uniqueSubs = Array.from(subSet).sort();
+    const currentSub = subcategorySelect.value.toUpperCase();
+    
+    let subHTML = '<option value="ALL">All Subcategories</option>';
+    uniqueSubs.forEach(sub => {
+        subHTML += `<option value="${sub}">${toTitleCase(sub)}</option>`;
+    });
+    
+    subcategorySelect.innerHTML = subHTML;
+    
+   
+    if (uniqueSubs.includes(currentSub) || currentSub === 'ALL') {
+        subcategorySelect.value = currentSub === 'ALL' ? 'ALL' : currentSub;
+    } else {
+        subcategorySelect.value = 'ALL';
+    }
+}
+
+
+
+let currentDisplayedCount = 50;
+let fakeAnimationReqId = null;
+let realAnimationReqId = null;
+let isFakeAnimating = false;
+
 function updateCompaniesCount() {
-    if (companiesCount) companiesCount.textContent = `(${jobsData.length})`;
+    if (isFakeAnimating || realAnimationReqId) return; 
+    if (companiesCount) {
+        companiesCount.textContent = `(${jobsData.length})`;
+    }
+}
+
+function startFakeAnimation(start, fakeTarget, duration = 8000) {
+    isFakeAnimating = true;
+    let startTimestamp = null;
+
+    const step = (timestamp) => {
+        if (!isFakeAnimating) return; 
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        currentDisplayedCount = Math.floor(easeOut * (fakeTarget - start) + start);
+        
+        if (companiesCount) {
+            companiesCount.innerHTML = `(${currentDisplayedCount}) <span style="display:inline-block; font-size:0.75rem; color:var(--accent-text); animation: spin 1s linear infinite;">⏳</span>`;
+        }
+        
+        if (progress < 1) {
+            fakeAnimationReqId = window.requestAnimationFrame(step);
+        }
+    };
+    fakeAnimationReqId = window.requestAnimationFrame(step);
+}
+
+function finishAnimationToReal(realTarget) {
+    isFakeAnimating = false;
+    if (fakeAnimationReqId) {
+        window.cancelAnimationFrame(fakeAnimationReqId);
+        fakeAnimationReqId = null;
+    }
+    if (realAnimationReqId) {
+        window.cancelAnimationFrame(realAnimationReqId);
+    }
+
+    let start = currentDisplayedCount;
+    let duration = 1200; 
+    let startTimestamp = null;
+
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        currentDisplayedCount = Math.floor(easeOut * (realTarget - start) + start);
+        
+        if (companiesCount) {
+            companiesCount.innerHTML = `(${currentDisplayedCount}) <span style="display:inline-block; font-size:0.75rem; color:var(--accent-text); animation: spin 1s linear infinite;">⏳</span>`;
+        }
+        
+        if (progress < 1) {
+            realAnimationReqId = window.requestAnimationFrame(step);
+        } else {
+            realAnimationReqId = null;
+            currentDisplayedCount = realTarget;
+            if (companiesCount) {
+                companiesCount.textContent = `(${realTarget})`;
+            }
+        }
+    };
+    realAnimationReqId = window.requestAnimationFrame(step);
 }
 
 function updateLocationCounts() {
@@ -150,26 +947,56 @@ function updateLocationCounts() {
 }
 
 async function fetchJobs() {
-    const cachedData = localStorage.getItem('cachedJobsData');
-    
-    if (cachedData) {
-        jobsData = JSON.parse(cachedData);
+    let cachedData = localStorage.getItem('cachedJobsData');
+    let parsedCache = null;
+
+    try {
+        if (cachedData) {
+            parsedCache = JSON.parse(cachedData);
+            if (!Array.isArray(parsedCache) || parsedCache.length < 50) {
+                parsedCache = null; 
+            }
+        }
+    } catch (e) {
+        parsedCache = null;
+    }
+
+    if (parsedCache) {
+        jobsData = parsedCache;
         updateLocationCounts();
-        updateCompaniesCount();
+        
+        currentDisplayedCount = 50;
+        finishAnimationToReal(jobsData.length);
+        
+        populateDropdowns(); 
         renderJobs(true);
     } else {
-        jobContainer.innerHTML = `
-            <div class="empty-state">
-                ${loadingSVG}
-                <p>LOADING...</p>
-            </div>
-        `;
+        jobsData = JSON.parse(JSON.stringify(initialJobsData));
+        updateLocationCounts();
+        
+        currentDisplayedCount = 50;
+        startFakeAnimation(50, 1783, 8000); 
+        
+        populateDropdowns();
+
+        if (jobsData.length > 0) {
+            renderJobs(true); 
+        } else {
+            jobContainer.innerHTML = `
+                <div class="empty-state">
+                    ${loadingSVG}
+                    <p>SYNCING DATABASE...</p>
+                </div>
+            `;
+        }
     }
 
     try {
         const response = await fetch(SHEET_URL, { redirect: "follow" });
         const data = await response.json();
         
+        if (!Array.isArray(data) || data.length === 0) throw new Error("Google Sheets'ten boş veri geldi.");
+
         const formattedData = data.map(job => ({
             id: parseInt(job.id),
             company: job.company ? cleanCompanyName(job.company) : '',
@@ -186,38 +1013,36 @@ async function fetchJobs() {
         
         localStorage.setItem('cachedJobsData', JSON.stringify(formattedData));
         
-        if (!cachedData || JSON.stringify(jobsData) !== JSON.stringify(formattedData)) {
-            jobsData = formattedData;
-            updateLocationCounts();
-            updateCompaniesCount();
-            
-            const searchText = document.getElementById('search-input').value;
-            if (currentPage === 1 && searchText === '') {
-                renderJobs(true);
+        jobsData = formattedData;
+        updateLocationCounts();
+        populateDropdowns();
+        
+        const searchText = document.getElementById('search-input').value;
+        if (currentPage === 1 && searchText === '') {
+            renderJobs(true);
+        }
+
+        if (!parsedCache) {
+            finishAnimationToReal(jobsData.length);
+        } else {
+            if (jobsData.length !== parsedCache.length) {
+                finishAnimationToReal(jobsData.length);
             }
         }
         
     } catch (error) {
         console.error("Veri çekme hatası:", error);
-        if (!cachedData) {
+        if (jobsData.length === 0) {
             jobContainer.innerHTML = `
                 <div class="empty-state">
                     <p style="color: #ef4444;">FAILED TO LOAD DATA.<br>MAKE SURE GOOGLE APPS SCRIPT IS DEPLOYED AS "ANYONE".</p>
                 </div>
             `;
         }
+        if (!parsedCache) finishAnimationToReal(jobsData.length);
     }
 }
 
-fieldSelect.addEventListener('change', (e) => {
-    if (e.target.value === 'Engineering') {
-        subcategorySelect.classList.remove('hidden');
-    } else {
-        subcategorySelect.classList.add('hidden');
-        subcategorySelect.value = 'All';
-    }
-    renderJobs(true);
-});
 
 function renderJobs(resetPage = true) {
     if (currentTab === 'about' || currentTab === 'analytics' || currentTab === 'recommendations') {
@@ -237,14 +1062,13 @@ function renderJobs(resetPage = true) {
 
                     <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem;">WHAT IS THIS WEBSITE?</h3>
                     <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                     I initially built this website to help my friends and myself find Erasmus internships. Everyone I talked to had to contact 100+ companies, and only a few of them received replies. In the end, they found their internships by emailing so many companies.
-
-However, finding a company that meets your criteria takes a lot of time. So here, I share my database as an interactive Excel table. By filtering based on your criteria and using this website as a search engine, you can save a lot of time and find opportunities more easily. You can also use it to find job opportunities, not just Erasmus internships.
-
-If you find it useful, please share this website so it can reach more people. Also, feel free to leave feedback to help it grow.
-
-Best of luck with your search!
-
+                        I initially built this website to help my friends and myself find Erasmus internships. Everyone I talked to had to contact 100+ companies, and only a few of them received replies. In the end, they found their internships by sending emails to a large number of companies.<br><br>
+                        However, finding companies that match your criteria takes a lot of time. That's why I'm sharing my database of companies that I collected from university technology centers and companies participating in industry events. These sources indicate that the companies are active and more likely to offer internship opportunities.<br><br>
+                        By filtering companies based on your criteria and using this website as an interactive, searchable spreadsheet, you can save a significant amount of time and find opportunities much more easily. You can also use it to search for full-time job opportunities, not just Erasmus internships.<br><br>
+                        If you find this website useful, please consider sharing it so it can reach more people. I'd also love to hear your feedback to help improve it.<br><br>
+                        This project is also open source. If you'd like to support it, please consider giving the GitHub repository a ⭐. It really helps the project gain visibility, motivates me to keep improving it, and makes it easier for others to discover.<br><br>
+                        GitHub Repository: <a href="https://github.com/erentoklu/Erasmus-Internship-Companies" target="_blank" style="color: var(--accent-text); text-decoration: underline;">https://github.com/erentoklu/Erasmus-Internship-Companies</a><br><br>
+                        Best of luck with your search!
                     </p>
 
                     <h3 style="color: var(--accent-text); font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">YOUR DATA IS YOURS</h3>
@@ -453,21 +1277,21 @@ Best of luck with your search!
                              selectedLocations.includes('ALL') || 
                              selectedLocations.some(loc => job.location.toUpperCase().includes(loc));
             
+           
             let matchField = false;
             if (field === 'ALL') {
                 matchField = true;
-            } else if (field === 'ENGINEERING') {
-                const isEng = job.category.includes('ENGINEERING') || job.category.includes('ENGINEER');
-                if (subField === 'ALL') {
-                    matchField = isEng;
-                } else {
-                    matchField = isEng && (
-                        job.subcategory.some(sub => sub.includes(subField)) ||
-                        job.subcategory2.some(sub => sub.includes(subField))
-                    );
-                }
             } else {
-                matchField = job.category === field;
+                const jobCats = job.category ? job.category.split(',').map(c => c.trim().toUpperCase()) : [];
+                const hasCategory = jobCats.includes(field);
+                
+                if (subField === 'ALL') {
+                    matchField = hasCategory;
+                } else {
+                    const hasSub = job.subcategory.map(s=>s.toUpperCase()).includes(subField) || 
+                                   job.subcategory2.map(s=>s.toUpperCase()).includes(subField);
+                    matchField = hasCategory && hasSub;
+                }
             }
 
             return matchSearch && matchLoc && matchField;
@@ -811,9 +1635,6 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-const filterInputs = document.querySelectorAll('.filter-input:not(#location-select)');
-filterInputs.forEach(el => el.addEventListener('input', () => renderJobs(true)));
-
 jobContainer.addEventListener('keydown', (e) => {
     if (e.target.id === 'load-more-btn') {
         if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w' || e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
@@ -890,5 +1711,17 @@ if (logoLink) {
         }
     });
 }
+
+
+document.getElementById('search-input').addEventListener('input', () => renderJobs(true));
+
+fieldSelect.addEventListener('change', () => {
+    updateSubcategoryDropdown();
+    renderJobs(true);
+});
+
+subcategorySelect.addEventListener('change', () => {
+    renderJobs(true);
+});
 
 fetchJobs();
