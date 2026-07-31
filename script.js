@@ -69,7 +69,7 @@ const initialJobsData = [
     {
         "id": 6,
         "company": "AJAX SYSTEMS",
-        "location": "International",
+        "location": "Ukraine, International",
         "category": "ENGINEERING, BUSINESS",
         "subcategory": ["ELECTRONICS", "SOFTWARE", "MANAGEMENT", "INDUSTRIAL"],
         "subcategory2": [],
@@ -676,10 +676,7 @@ const modalOverlay = document.querySelector('.modal-overlay');
 const closeModalBtn = document.getElementById('close-modal');
 const modalBody = document.getElementById('modal-body');
 
-const fieldSelect = document.getElementById('field-select');
-const subcategorySelect = document.getElementById('subcategory-select');
-
-// Metinleri düzgün formatlamak için
+// Metinleri düzgün formatlamak için (Örn: IOT, IT gibi kısaltmaları korur)
 function toTitleCase(str) {
     if (!str) return "";
     const acronyms = ["IT", "IOT", "AI", "UX", "UI", "PR", "HR", "R&D", "B2B", "NGO", "3D", "5G", "AV", "EV"];
@@ -737,55 +734,63 @@ const flagSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" 
 const leftArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`;
 const rightArrowSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
 
-function setupLocationDropdown() {
-    const locationAnchor = document.getElementById('location-anchor');
-    const checkList = document.querySelector('.dropdown-check-list');
-    const locCheckboxes = document.querySelectorAll('#location-items input[type="checkbox"]');
 
-    locationAnchor.addEventListener('click', (e) => {
-        checkList.classList.toggle('visible');
+// ==========================================
+// YENİ DROPDOWN SİSTEMİ (Çoklu Seçim İçin)
+// ==========================================
+document.addEventListener('click', (e) => {
+    document.querySelectorAll('.dropdown-check-list').forEach(list => {
+        if (!list.contains(e.target)) {
+            list.classList.remove('visible');
+        }
+    });
+});
+
+function bindDropdownEvents(anchorId, itemsId, defaultText, callback) {
+    const anchor = document.getElementById(anchorId);
+    if (!anchor) return;
+    const checkList = anchor.parentElement;
+    const itemsList = document.getElementById(itemsId);
+
+    const newAnchor = anchor.cloneNode(true);
+    anchor.parentNode.replaceChild(newAnchor, anchor);
+
+    newAnchor.addEventListener('click', (e) => {
+        const isVisible = checkList.classList.contains('visible');
+        document.querySelectorAll('.dropdown-check-list').forEach(list => list.classList.remove('visible'));
+        if (!isVisible) checkList.classList.add('visible');
         e.stopPropagation();
     });
 
-    document.addEventListener('click', (e) => {
-        if (!checkList.contains(e.target)) {
-            checkList.classList.remove('visible');
-        }
-    });
-
-    locCheckboxes.forEach(cb => {
+    const checkboxes = itemsList.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
         cb.addEventListener('change', (e) => {
-            if (e.target.value === 'All' && e.target.checked) {
-                locCheckboxes.forEach(box => {
-                    if (box.value !== 'All') box.checked = false;
-                });
-            } else if (e.target.value !== 'All' && e.target.checked) {
-                locCheckboxes[0].checked = false;
+            const value = e.target.value.toUpperCase();
+            if (value === 'ALL' && e.target.checked) {
+                checkboxes.forEach(box => { if (box.value.toUpperCase() !== 'ALL') box.checked = false; });
+            } else if (value !== 'ALL' && e.target.checked) {
+                if(checkboxes[0].value.toUpperCase() === 'ALL') checkboxes[0].checked = false;
             }
 
-            const anyChecked = Array.from(locCheckboxes).some(box => box.checked);
-            if (!anyChecked) {
-                locCheckboxes[0].checked = true;
-            }
+            const anyChecked = Array.from(checkboxes).some(box => box.checked);
+            if (!anyChecked) checkboxes[0].checked = true;
 
-            const checkedBoxes = Array.from(locCheckboxes).filter(box => box.checked);
-            if (checkedBoxes[0].value === 'All') {
-                locationAnchor.textContent = 'All Locations';
+            const checkedBoxes = Array.from(checkboxes).filter(box => box.checked);
+            if (checkedBoxes[0].value.toUpperCase() === 'ALL') {
+                newAnchor.textContent = defaultText;
             } else {
-                const names = checkedBoxes.map(b => b.value);
-                locationAnchor.textContent = names.join(', ');
+                const names = checkedBoxes.map(b => b.nextElementSibling.textContent);
+                newAnchor.textContent = names.join(', ');
             }
 
-            renderJobs(true);
+            if (callback) callback();
         });
     });
 }
-setupLocationDropdown();
 
 function updateSavedCount() {
     if (savedCount) savedCount.textContent = `(${savedJobs.length})`;
 }
-
 
 function populateDropdowns() {
     const categoriesSet = new Set();
@@ -799,65 +804,71 @@ function populateDropdowns() {
     });
     
     const uniqueCategories = Array.from(categoriesSet).sort();
-    const currentCategory = fieldSelect.value.toUpperCase();
+    const categoryItems = document.getElementById('category-items');
     
-    let catHTML = '<option value="ALL">All Categories</option>';
+    let catHTML = `<li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Categories</span></label></li>`;
     uniqueCategories.forEach(cat => {
-        catHTML += `<option value="${cat}">${toTitleCase(cat)}</option>`;
+        catHTML += `<li><label><input type="checkbox" value="${cat}"> <span class="loc-text">${toTitleCase(cat)}</span></label></li>`;
     });
     
-    fieldSelect.innerHTML = catHTML;
+    categoryItems.innerHTML = catHTML;
+    document.getElementById('category-anchor').textContent = 'All Categories';
     
-    
-    if (uniqueCategories.includes(currentCategory) || currentCategory === 'ALL') {
-        fieldSelect.value = currentCategory === 'ALL' ? 'ALL' : currentCategory;
-    } else {
-        fieldSelect.value = 'ALL';
-    }
+    bindDropdownEvents('category-anchor', 'category-items', 'All Categories', () => {
+        updateSubcategoryDropdown();
+        renderJobs(true);
+    });
     
     updateSubcategoryDropdown();
 }
 
 function updateSubcategoryDropdown() {
-    const selectedCategory = fieldSelect.value.toUpperCase();
+    const checkedCatBoxes = document.querySelectorAll('#category-items input[type="checkbox"]:checked');
+    const selectedCategories = Array.from(checkedCatBoxes).map(cb => cb.value.toUpperCase());
     
-    if (selectedCategory === 'ALL') {
-        subcategorySelect.classList.add('hidden');
-        subcategorySelect.innerHTML = '<option value="ALL">All Subcategories</option>';
+    const subWrapper = document.getElementById('subcategory-wrapper');
+    const subItems = document.getElementById('subcategory-items');
+    const subAnchor = document.getElementById('subcategory-anchor');
+    
+    if (selectedCategories.includes('ALL')) {
+        subWrapper.classList.add('hidden');
+        subItems.innerHTML = `<li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Subcategories</span></label></li>`;
+        subAnchor.textContent = 'All Subcategories';
         return;
     }
     
-    subcategorySelect.classList.remove('hidden');
+    subWrapper.classList.remove('hidden');
     
     const subSet = new Set();
     jobsData.forEach(job => {
         const jobCats = job.category ? job.category.split(',').map(c => c.trim().toUpperCase()) : [];
-        if (jobCats.includes(selectedCategory)) {
+        const matchCat = selectedCategories.some(cat => jobCats.includes(cat));
+        
+        if (matchCat) {
             if (job.subcategory) job.subcategory.forEach(sub => { if(sub) subSet.add(sub.toUpperCase()); });
             if (job.subcategory2) job.subcategory2.forEach(sub => { if(sub) subSet.add(sub.toUpperCase()); });
         }
     });
     
     const uniqueSubs = Array.from(subSet).sort();
-    const currentSub = subcategorySelect.value.toUpperCase();
     
-    let subHTML = '<option value="ALL">All Subcategories</option>';
+    let subHTML = `<li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Subcategories</span></label></li>`;
     uniqueSubs.forEach(sub => {
-        subHTML += `<option value="${sub}">${toTitleCase(sub)}</option>`;
+        subHTML += `<li><label><input type="checkbox" value="${sub}"> <span class="loc-text">${toTitleCase(sub)}</span></label></li>`;
     });
     
-    subcategorySelect.innerHTML = subHTML;
+    subItems.innerHTML = subHTML;
+    subAnchor.textContent = 'All Subcategories';
     
-   
-    if (uniqueSubs.includes(currentSub) || currentSub === 'ALL') {
-        subcategorySelect.value = currentSub === 'ALL' ? 'ALL' : currentSub;
-    } else {
-        subcategorySelect.value = 'ALL';
-    }
+    bindDropdownEvents('subcategory-anchor', 'subcategory-items', 'All Subcategories', () => {
+        renderJobs(true);
+    });
 }
 
 
-
+// ==========================================
+// 5. ADIM: ANİMASYON VE CACHE YÖNETİMİ
+// ==========================================
 let currentDisplayedCount = 50;
 let fakeAnimationReqId = null;
 let realAnimationReqId = null;
@@ -1255,8 +1266,11 @@ function renderJobs(resetPage = true) {
         const checkedLocationBoxes = document.querySelectorAll('#location-items input[type="checkbox"]:checked');
         const selectedLocations = Array.from(checkedLocationBoxes).map(cb => cb.value.toUpperCase());
 
-        const field = fieldSelect.value.toUpperCase();
-        const subField = subcategorySelect.value.toUpperCase();
+        const checkedCategoryBoxes = document.querySelectorAll('#category-items input[type="checkbox"]:checked');
+        const selectedFields = Array.from(checkedCategoryBoxes).map(cb => cb.value.toUpperCase());
+
+        const checkedSubBoxes = document.querySelectorAll('#subcategory-items input[type="checkbox"]:checked');
+        const selectedSubFields = Array.from(checkedSubBoxes).map(cb => cb.value.toUpperCase());
 
         currentFilteredJobs = jobsData.filter(job => {
             if (currentTab === 'kaydedilenler') {
@@ -1273,23 +1287,21 @@ function renderJobs(resetPage = true) {
                                 job.subcategory.some(sub => sub.includes(searchText)) ||
                                 job.subcategory2.some(sub => sub.includes(searchText));
             
-            const matchLoc = selectedLocations.length === 0 || 
-                             selectedLocations.includes('ALL') || 
+            const matchLoc = selectedLocations.includes('ALL') || 
                              selectedLocations.some(loc => job.location.toUpperCase().includes(loc));
             
-           
             let matchField = false;
-            if (field === 'ALL') {
+            if (selectedFields.includes('ALL')) {
                 matchField = true;
             } else {
                 const jobCats = job.category ? job.category.split(',').map(c => c.trim().toUpperCase()) : [];
-                const hasCategory = jobCats.includes(field);
+                const hasCategory = selectedFields.some(field => jobCats.includes(field));
                 
-                if (subField === 'ALL') {
+                if (selectedSubFields.includes('ALL')) {
                     matchField = hasCategory;
                 } else {
-                    const hasSub = job.subcategory.map(s=>s.toUpperCase()).includes(subField) || 
-                                   job.subcategory2.map(s=>s.toUpperCase()).includes(subField);
+                    const jobSubs = [...job.subcategory, ...job.subcategory2].map(s => s.toUpperCase());
+                    const hasSub = selectedSubFields.some(sub => jobSubs.includes(sub));
                     matchField = hasCategory && hasSub;
                 }
             }
@@ -1712,16 +1724,9 @@ if (logoLink) {
     });
 }
 
+// Konum filtrelerini başlatma (diğer filtreler populateDropdowns üzerinden çalışır)
+bindDropdownEvents('location-anchor', 'location-items', 'All Locations', () => renderJobs(true));
 
 document.getElementById('search-input').addEventListener('input', () => renderJobs(true));
-
-fieldSelect.addEventListener('change', () => {
-    updateSubcategoryDropdown();
-    renderJobs(true);
-});
-
-subcategorySelect.addEventListener('change', () => {
-    renderJobs(true);
-});
 
 fetchJobs();

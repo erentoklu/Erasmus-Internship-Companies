@@ -12,7 +12,6 @@
 
     <header class="header">
         <div class="logo-container" id="logo-link" title="Go to Companies">
-            <!-- Logonun eklendiği kısım -->
             <img src="logo.png" alt="iE Logo" class="ie-logo-img">
             <div class="brand-text">
                 <div class="logo">intern<span>Erasmus</span></div>
@@ -47,37 +46,57 @@
                 <div class="dropdown-check-list">
                     <span class="anchor" id="location-anchor">All Locations</span>
                     <ul class="items" id="location-items">
-                        <li><label><input type="checkbox" value="All" checked> <span class="loc-text">All Locations</span></label></li>
-                        <li><label><input type="checkbox" value="Germany"> <span class="loc-text">Germany</span></label></li>
-                        <li><label><input type="checkbox" value="France"> <span class="loc-text">France</span></label></li>
-                        <li><label><input type="checkbox" value="Spain"> <span class="loc-text">Spain</span></label></li>
-                        <li><label><input type="checkbox" value="Italy"> <span class="loc-text">Italy</span></label></li>
-                        <li><label><input type="checkbox" value="Netherlands"> <span class="loc-text">Netherlands</span></label></li>
-                        <li><label><input type="checkbox" value="Portugal"> <span class="loc-text">Portugal</span></label></li>
-                        <li><label><input type="checkbox" value="Greece"> <span class="loc-text">Greece</span></label></li>
+                        <li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Locations</span></label></li>
                         <li><label><input type="checkbox" value="Austria"> <span class="loc-text">Austria</span></label></li>
                         <li><label><input type="checkbox" value="Belgium"> <span class="loc-text">Belgium</span></label></li>
-                        <li><label><input type="checkbox" value="Poland"> <span class="loc-text">Poland</span></label></li>
+                        <li><label><input type="checkbox" value="Bulgaria"> <span class="loc-text">Bulgaria</span></label></li>
+                        <li><label><input type="checkbox" value="Croatia"> <span class="loc-text">Croatia</span></label></li>
+                        <li><label><input type="checkbox" value="Cyprus"> <span class="loc-text">Cyprus</span></label></li>
                         <li><label><input type="checkbox" value="Czechia"> <span class="loc-text">Czechia</span></label></li>
+                        <li><label><input type="checkbox" value="Denmark"> <span class="loc-text">Denmark</span></label></li>
+                        <li><label><input type="checkbox" value="Estonia"> <span class="loc-text">Estonia</span></label></li>
+                        <li><label><input type="checkbox" value="Finland"> <span class="loc-text">Finland</span></label></li>
+                        <li><label><input type="checkbox" value="France"> <span class="loc-text">France</span></label></li>
+                        <li><label><input type="checkbox" value="Germany"> <span class="loc-text">Germany</span></label></li>
+                        <li><label><input type="checkbox" value="Greece"> <span class="loc-text">Greece</span></label></li>
+                        <li><label><input type="checkbox" value="Hungary"> <span class="loc-text">Hungary</span></label></li>
+                        <li><label><input type="checkbox" value="Iceland"> <span class="loc-text">Iceland</span></label></li>
+                        <li><label><input type="checkbox" value="Ireland"> <span class="loc-text">Ireland</span></label></li>
+                        <li><label><input type="checkbox" value="Italy"> <span class="loc-text">Italy</span></label></li>
+                        <li><label><input type="checkbox" value="Latvia"> <span class="loc-text">Latvia</span></label></li>
+                        <li><label><input type="checkbox" value="Liechtenstein"> <span class="loc-text">Liechtenstein</span></label></li>
+                        <li><label><input type="checkbox" value="Lithuania"> <span class="loc-text">Lithuania</span></label></li>
+                        <li><label><input type="checkbox" value="Luxembourg"> <span class="loc-text">Luxembourg</span></label></li>
+                        <li><label><input type="checkbox" value="Malta"> <span class="loc-text">Malta</span></label></li>
+                        <li><label><input type="checkbox" value="Netherlands"> <span class="loc-text">Netherlands</span></label></li>
+                        <li><label><input type="checkbox" value="North Macedonia"> <span class="loc-text">North Macedonia</span></label></li>
+                        <li><label><input type="checkbox" value="Norway"> <span class="loc-text">Norway</span></label></li>
+                        <li><label><input type="checkbox" value="Poland"> <span class="loc-text">Poland</span></label></li>
+                        <li><label><input type="checkbox" value="Portugal"> <span class="loc-text">Portugal</span></label></li>
+                        <li><label><input type="checkbox" value="Romania"> <span class="loc-text">Romania</span></label></li>
+                        <li><label><input type="checkbox" value="Serbia"> <span class="loc-text">Serbia</span></label></li>
+                        <li><label><input type="checkbox" value="Slovakia"> <span class="loc-text">Slovakia</span></label></li>
+                        <li><label><input type="checkbox" value="Slovenia"> <span class="loc-text">Slovenia</span></label></li>
+                        <li><label><input type="checkbox" value="Spain"> <span class="loc-text">Spain</span></label></li>
+                        <li><label><input type="checkbox" value="Sweden"> <span class="loc-text">Sweden</span></label></li>
+                        <li><label><input type="checkbox" value="Türkiye"> <span class="loc-text">Türkiye</span></label></li>
+                        <li><label><input type="checkbox" value="Ukraine"> <span class="loc-text">Ukraine</span></label></li>
                     </ul>
                 </div>
 
-                <select id="field-select" class="filter-input custom-select">
-                    <option value="All" selected>All Categories</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Software">Software</option>
-                    <option value="Business">Business</option>
-                    <option value="Art">Art</option>
-                </select>
+                <div class="dropdown-check-list" id="category-wrapper">
+                    <span class="anchor" id="category-anchor">All Categories</span>
+                    <ul class="items" id="category-items">
+                        <li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Categories</span></label></li>
+                    </ul>
+                </div>
 
-                <select id="subcategory-select" class="filter-input custom-select hidden">
-                    <option value="All" selected>All Subcategories</option>
-                    <option value="Electrical">Electrical</option>
-                    <option value="Mechanical">Mechanical</option>
-                    <option value="Mechatronics">Mechatronics</option>
-                    <option value="Civil">Civil</option>
-                    <option value="Chemical">Chemical</option>
-                </select>
+                <div class="dropdown-check-list hidden" id="subcategory-wrapper">
+                    <span class="anchor" id="subcategory-anchor">All Subcategories</span>
+                    <ul class="items" id="subcategory-items">
+                        <li><label><input type="checkbox" value="ALL" checked> <span class="loc-text">All Subcategories</span></label></li>
+                    </ul>
+                </div>
             </div>
         </section>
 

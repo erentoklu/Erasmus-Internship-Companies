@@ -67,12 +67,11 @@ body {
     border-bottom: 1px solid var(--border-color); 
 }
 
-/* --- LOGO VE BAŞLIK GÜNCELLEMELERİ --- */
 .logo-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 12px; /* Resim ve yazı arasındaki boşluk */
+    gap: 12px;
     cursor: pointer;
     text-decoration: none;
 }
@@ -83,6 +82,9 @@ body {
     flex-shrink: 0;
     transition: transform 0.2s ease, opacity 0.2s ease;
     border-radius: 6px;
+    /* Aydınlık modda çerçeveyi belirginleştiren kısım */
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
 }
 
 .logo-container:hover .ie-logo-img {
@@ -95,7 +97,6 @@ body {
     flex-direction: column;
     justify-content: center;
 }
-/* ------------------------------------- */
 
 .logo { 
     font-size: 1.25rem; 
@@ -192,17 +193,6 @@ body {
 }
 
 .filter-input:focus { border-color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent-light); }
-
-select.custom-select {
-    cursor: pointer; 
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 2.5rem;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat; 
-    background-position: right 0.8rem center; 
-    background-size: 1.2em;
-}
 
 .dropdown-check-list {
     position: relative;
@@ -422,23 +412,21 @@ select.custom-select {
     .theme-btn {
         order: 2;
     }
-    /* Burada grid (tablo) yapısına geçiyoruz */
     .nav-middle-wrapper {
         order: 3;
         width: 100%;
         margin: 0.8rem 0 0 0; 
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 2 Sütunlu düzen */
-        gap: 1rem; /* Satır ve sütunlar arası boşluk */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
-    /* Alt gruplandırmaları devre dışı bırakıp ana tabloya dahil ediyoruz */
     .tabs-left, .tabs-right {
         display: contents; 
     }
     .tab-btn {
         font-size: 0.9rem;
         white-space: normal;
-        text-align: left; /* Yazıları sola yaslıyoruz */
+        text-align: left;
         padding-bottom: 0.3rem;
         display: flex;
         align-items: center;
